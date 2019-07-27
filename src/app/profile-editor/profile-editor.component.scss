@@ -1,0 +1,62 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+
+    mat-card {
+        min-height: 150px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+
+        a {
+            cursor: pointer;
+            color: $yellow;
+        }
+    }
+    
+    .button-flex {
+        display: flex;
+        flex-direction: row-reverse;
+        
+        button {
+            margin-bottom: 15px;
+        }
+
+        .delete {
+            margin-right: 15px;
+            color: #fff;
+        }
+
+        [ng-reflect-disabled="false"] {
+            background-color: $warn;
+        }
+
+        mat-icon {
+            font-size: 21px;
+        }
+    } 
+
+    table {
+        width: 100%;
+
+        td.cdk-column-key {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 350px;
+        }
+
+        td.cdk-column-edit {
+            text-align: right;
+
+            mat-icon {
+                cursor: pointer;
+                color: #999;
+                font-size: 19px;
+                position: relative;
+                top: 3px;
+            }
+        }
+    }
+}

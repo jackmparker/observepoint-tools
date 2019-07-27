@@ -1,0 +1,13 @@
+@import '../../assets/styles/variables.scss';
+
+.tool {
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 15px;
+    padding: 30px 20px;
+
+    mat-card-title {
+        color: $yellow;
+        font-size: 17px;
+    }
+}

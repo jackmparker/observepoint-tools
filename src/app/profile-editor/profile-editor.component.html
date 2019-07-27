@@ -1,0 +1,49 @@
+<div class="outer-wrap">
+    <mat-card *ngIf="!profiles.length">
+        <p>You don't currently have any saved profiles. <a (click)="addNewProfile()">Click here to add one!</a></p>
+    </mat-card>
+    <div *ngIf="profiles.length">
+        <div class="button-flex">
+            <button mat-flat-button color="primary" (click)="addNewProfile()">
+                <mat-icon>add_circle</mat-icon>
+                Add New Profile
+            </button>
+            <button mat-flat-button (click)="deleteProfiles()" class="delete" [disabled]="!selection.hasValue()">
+                <mat-icon>delete</mat-icon>
+                Delete Selected Profiles
+            </button>
+        </div>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                    color="primary">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(row) : null"
+                                [checked]="selection.isSelected(row)"
+                                color="primary">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Profile Name</th>
+                <td mat-cell *matCellDef="let profile">{{ profile.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="key">
+                <th mat-header-cell *matHeaderCellDef>API Key</th>
+                <td mat-cell *matCellDef="let profile">{{ profile.key }}</td>
+            </ng-container>
+            <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let profile; let row;"><mat-icon (click)="onEdit(row)">edit</mat-icon></td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+
+    h1 {
+        font-size: 21px;
+        color: $yellow;
+        margin-bottom: 35px;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+    
+    .profile-flex {
+        display: flex;
+        flex-direction: row-reverse;
+
+        .cancel {
+            margin-right: 20px;
+        }
+
+        .save {
+            color: $text;
+        }
+    }
+}

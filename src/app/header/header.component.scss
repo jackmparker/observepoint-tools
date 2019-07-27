@@ -1,0 +1,33 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+	background-color: #fff;
+	margin-bottom: 50px;
+	padding: 20px 0;
+	border-bottom: 1px solid #ccc;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+
+	.outer-wrap {
+		display: flex;
+		justify-content: space-between;
+
+		.logo {
+			position: relative;
+    		top: 5px;
+			width: 165px;
+		}
+
+		mat-icon {
+			font-size: 20px;
+			position: relative;
+			top: 1px;
+		}
+	}
+}

@@ -1,0 +1,35 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+    margin-right: 30px;
+
+    ul {
+        margin: 0;
+        padding: 0;
+
+        li {
+            cursor: pointer;
+            list-style: none;
+            padding: 5px 10px;
+            margin: 15px 0;
+            outline: none;
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            &:hover {
+                color: $yellow;
+            }
+
+            &.selected {
+                border-left: solid 4px $yellow;
+                color: $yellow;
+            }
+        }
+    }
+}

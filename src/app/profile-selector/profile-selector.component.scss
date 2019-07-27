@@ -1,0 +1,13 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+
+    .select {
+        margin-bottom: 25px;
+    }
+
+    .clickable {
+        color: $yellow;
+        cursor: pointer;
+    }
+}

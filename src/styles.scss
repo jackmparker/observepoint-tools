@@ -1,1 +1,113 @@
-/* You can add global styles to this file, and also import other style files */
+@import './op-tools-theme.scss';
+@import './assets/styles/variables.scss';
+
+
+/*
+|----------------------------------------------------------
+| GLOBAL
+|----------------------------------------------------------
+*
+*/
+
+html {
+	color: $text;
+	font-family: 'Roboto', sans-serif;
+	line-height: 23px;
+	background-color: #e7e7e7;
+	padding-top: 115px;
+}
+
+body {
+	padding-bottom: 50px;
+}
+
+.outer-wrap {
+	margin: 0 auto;
+	max-width: 1000px;
+	position: relative;
+	width: 100%;
+}
+
+.wrap {
+	padding: 0 20px;
+	position: relative;
+	width: 100%;
+}
+
+.flex {
+	display: flex;
+}
+
+sidebar {
+	flex-basis: 225px;
+}
+
+.main {
+	flex: 1;
+}
+
+mat-dialog-container {
+    border-radius: 0 !important;
+}
+
+mat-card {
+	border-radius: 0 !important;
+
+	&.tool-container {
+		padding: 30px;
+
+		mat-card-title {
+			color: $yellow;
+		}
+
+		mat-card-content {
+			margin-bottom: 50px;
+		}
+	}
+
+	.form-group {
+		margin-bottom: 40px;
+		position: relative;
+
+		&.input {
+			margin-bottom: 15px;
+		}
+
+		.mat-form-field {
+			display: block;
+		}
+
+		.mat-form-field-infix,
+		.full-width {
+			min-width: 100%;
+			width: 100%;
+		}
+
+		.instruction {
+			position: absolute;
+			bottom: -2px;
+			left: 0;
+			font-style: italic;
+			font-size: 11px;
+			color: $secondary;
+		}
+
+		.clickable {
+			color: $yellow;
+		}
+	}
+
+	.form-submit-container {
+		display: flex;
+		flex-direction: row-reverse;
+	}
+}
+
+.form-error {
+	background-color: $warn-background;
+	position: relative;
+    top: -20px;
+    font-style: italic;
+    font-size: 13px;
+    padding: 5px 10px;
+}

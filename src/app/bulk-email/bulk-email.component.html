@@ -1,0 +1,55 @@
+<div class="outer-wrap flex">
+  <sidebar current="{{ sidebar }}"></sidebar>
+  <div class="main">
+    <mat-card class="tool-container">
+      <mat-card-title>{{ title }}</mat-card-title>
+      <mat-card-content>{{ description }}</mat-card-content>
+      <form [formGroup]="bulkEmailForm" (ngSubmit)="onSubmit(bulkEmailForm)">
+        <div class="form-group radio-buttons">
+          <mat-radio-group formControlName="addRemove" name="addRemove" aria-label="Select an option">
+            <mat-radio-button value="add">Add Emails</mat-radio-button>
+            <mat-radio-button value="remove">Remove Emails</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <profile-selector [form]="bulkEmailForm"
+                          (keyEmitter)="getFilters($event)">
+        </profile-selector>
+        <div class="form-group">
+          <mat-form-field class="full-width">
+            <textarea formControlName="emails" matInput placeholder="Emails to Add" rows="2"></textarea>
+          </mat-form-field>
+          <small class="instruction">One email address per line</small>
+          <div *ngIf="emails.errors && emails.touched" class="form-error">
+              <small *ngIf="emails.errors.required">This field is required</small>
+              <small *ngIf="emails.errors.emailListValidator">Invalid email</small>
+          </div>
+        </div>
+        <div class="form-group">
+            <filter-options [form]="bulkEmailForm"
+                            [labels]="labelData"
+                            [folders]="folderData"
+                            [domains]="domainData"
+                            (filterChecked)="onFilterChange($event)">
+            </filter-options>
+        </div>
+        <div class="form-group" formGroupName="applyTo">
+          <p class="apply-to">{{ addRemoveSelection }}</p>
+          <mat-checkbox formControlName="audits" name="audits" color="primary">Web Audits</mat-checkbox>
+          <mat-checkbox formControlName="journeys" name="journeys" color="primary">Web Journeys</mat-checkbox>
+          <mat-checkbox formControlName="apps" name="apps" color="primary">Mobile Apps</mat-checkbox>
+          <mat-checkbox formControlName="rules" name="rules" color="primary">Rules</mat-checkbox>
+        </div>
+        <input formControlName="checkboxValidator" type="text" [hidden]="true">
+        <div class="form-group form-submit-container">
+          <button mat-flat-button
+                  color="primary"
+                  type="submit" 
+                  class="form-submit"
+                  [disabled]="!bulkEmailForm.valid">
+            Submit
+          </button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

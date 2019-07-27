@@ -1,0 +1,27 @@
+@import '../../assets/styles/variables.scss';
+
+mat-expansion-panel small {
+    color: $secondary;
+    font-style: italic;
+    display: block;
+}
+
+.columns {
+    // column-count: 2;
+    margin: 25px 0 0 15px;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    max-height: 300px;
+
+    mat-checkbox {
+        display: block;
+        margin-bottom: 7px;
+    }
+}
+
+::ng-deep {
+    .mat-checkbox-layout {
+        white-space: normal !important;
+    }
+}

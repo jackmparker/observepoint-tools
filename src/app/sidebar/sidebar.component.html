@@ -1,0 +1,9 @@
+<mat-card>
+    <ul>
+        <li *ngFor="let tool of tools"
+            routerLink="{{ tool.path }}"
+            [class.selected]="current === tool.path">
+            {{ tool.title }}
+        </li>
+    </ul>
+</mat-card>

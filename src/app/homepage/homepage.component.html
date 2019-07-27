@@ -1,0 +1,6 @@
+<div class="outer-wrap">
+    <mat-card routerLink="{{ tool.path }}" *ngFor="let tool of tools" class="tool">
+        <mat-card-title>{{ tool.name }}</mat-card-title>
+        <mat-card-content>{{ tool.description }}</mat-card-content>
+    </mat-card>
+</div>

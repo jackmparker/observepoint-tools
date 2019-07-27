@@ -1,0 +1,20 @@
+<h1 *ngIf="data.event == 'new'">Enter New API Key Profile</h1>
+<h1 *ngIf="data.event == 'edit'">Edit API Key Profile</h1>
+<form [formGroup]="newProfileForm">
+    <mat-form-field>
+        <input formControlName="name" matInput placeholder="API Key Name">
+    </mat-form-field>
+    <div *ngIf="newProfileForm.controls.name.errors && newProfileForm.controls.name.touched" class="form-error">
+        <small>This field is required</small>
+    </div>
+    <mat-form-field>
+        <input formControlName="key" matInput placeholder="API Key Value">
+    </mat-form-field>
+    <div *ngIf="newProfileForm.controls.key.errors && newProfileForm.controls.key.touched" class="form-error">
+        <small>This field is required</small>
+    </div>
+    <div class="profile-flex">
+        <button mat-flat-button color="primary" (click)="onSave()" class="save" [disabled]="newProfileForm.status == 'INVALID'">Save</button>
+        <button (click)="onCancel()" mat-stroked-button color="primary" class="cancel">Cancel</button>
+    </div>
+</form>
