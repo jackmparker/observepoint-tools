@@ -1,61 +1,65 @@
-<div [formGroup]="form">
+<div>
     <mat-expansion-panel>
         <mat-expansion-panel-header>
             <mat-panel-title>
                 Filter Options
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <small *ngIf="!labelField.length || !folderField.length || !domainField.length">
+        <small *ngIf="!labels || !folders || !domains">
             Please select or enter an API key above to view filter options.
         </small>
-        <mat-tab-group *ngIf="labelField.length || folderField.length || domainField.length">
-            <mat-tab label="Labels" *ngIf="labelField.length" [disabled]="foldersSelected || domainsSelected">
+        <mat-tab-group *ngIf="labels && folders && domains">
+            <mat-tab label="Labels" *ngIf="labels" [disabled]="disableLabels">
                 <div class="columns">
                     <mat-form-field>
                         <input matInput
                                placeholder="Search labels"
                                autocomplete="off"
-                               formControlName="labelSearchText">
+                               [(ngModel)]="searchText">
                     </mat-form-field>
-                    <mat-checkbox *ngFor="let label of labelField.controls | filter: labelSearchText; let i = index"
-                                  [formControl]="label"
+                    <mat-checkbox *ngFor="let label of labels | filter: searchText"
                                   color="primary"
-                                  value="{{ labels[i].id }}"
-                                  name="{{ labels[i].name }}">
-                        {{ labels[i].name }}
+                                  [value]="label"
+                                  name="{{ label.name }}"
+                                  (change)="onCheckboxChange($event, 'label')">
+                        {{ label.name }}
                     </mat-checkbox>
                 </div>
             </mat-tab>
-            <mat-tab label="Folders" *ngIf="folderField.length" [disabled]="labelsSelected || domainsSelected">
-                <div class="columns">
-                    <mat-form-field>
-                        <input matInput
-                               placeholder="Search folders"
-                               autocomplete="off">
-                    </mat-form-field>
-                    <mat-checkbox *ngFor="let folder of folderField.controls; let i = index"
-                                  [formControl]="folder"
-                                  color="primary"
-                                  value="{{ folders[i].id }}">
-                        {{ folders[i].name }}
-                    </mat-checkbox>
-                </div>
-            </mat-tab>
-            <mat-tab label="Domains" *ngIf="domainField.length" [disabled]="foldersSelected || labelsSelected">
-                <div class="columns">
-                    <mat-form-field>
-                        <input matInput
-                               placeholder="Search domains"
-                               autocomplete="off">
-                    </mat-form-field>
-                    <mat-checkbox *ngFor="let domain of domainField.controls; let i = index"
-                                  [formControl]="domain"
-                                  color="primary"
-                                  value="{{ domains[i].id }}">
-                        {{ domains[i].name }}
-                    </mat-checkbox>
-                </div>
-            </mat-tab>
+            <mat-tab label="Folders" *ngIf="folders" [disabled]="disableFolders">
+                    <div class="columns">
+                        <mat-form-field>
+                            <input matInput
+                                   placeholder="Search folders"
+                                   autocomplete="off"
+                                   [(ngModel)]="searchText">
+                        </mat-form-field>
+                        <mat-checkbox *ngFor="let folder of folders | filter: searchText"
+                                      color="primary"
+                                      [value]="folder"
+                                      name="{{ folder.name }}"
+                                      (change)="onCheckboxChange($event, 'folder')">
+                            {{ folder.name }}
+                        </mat-checkbox>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Domains" *ngIf="domains" [disabled]="disableDomains">
+                        <div class="columns">
+                            <mat-form-field>
+                                <input matInput
+                                       placeholder="Search domains"
+                                       autocomplete="off"
+                                       [(ngModel)]="searchText">
+                            </mat-form-field>
+                            <mat-checkbox *ngFor="let domain of domains | filter: searchText"
+                                          color="primary"
+                                          [value]="domain"
+                                          name="{{ domain.name }}"
+                                          (change)="onCheckboxChange($event, 'domain')">
+                                {{ domain.name }}
+                            </mat-checkbox>
+                        </div>
+                    </mat-tab>
         </mat-tab-group>
     </mat-expansion-panel>
 </div>

@@ -2,11 +2,16 @@
   <sidebar current="{{ sidebar }}"></sidebar>
   <div class="main">
     <mat-card class="tool-container">
-      <mat-card-title>{{ title }}</mat-card-title>
-      <mat-card-content>{{ description }}</mat-card-content>
+      <mat-card-title class="tool-title">{{ title }}</mat-card-title>
+      <mat-card-content class="tool-description">{{ description }}</mat-card-content>
+      <success [message]="successMessage"
+               [show]="showSuccess">
+      </success>
       <form [formGroup]="bulkEmailForm" (ngSubmit)="onSubmit(bulkEmailForm)">
         <div class="form-group radio-buttons">
-          <mat-radio-group formControlName="addRemove" name="addRemove" aria-label="Select an option">
+          <mat-radio-group formControlName="addRemove"
+                           name="addRemove"
+                           aria-label="Select an option">
             <mat-radio-button value="add">Add Emails</mat-radio-button>
             <mat-radio-button value="remove">Remove Emails</mat-radio-button>
           </mat-radio-group>
@@ -16,7 +21,7 @@
         </profile-selector>
         <div class="form-group">
           <mat-form-field class="full-width">
-            <textarea formControlName="emails" matInput placeholder="Emails to Add" rows="2"></textarea>
+            <textarea formControlName="emails" matInput placeholder="Email Addresses" rows="2"></textarea>
           </mat-form-field>
           <small class="instruction">One email address per line</small>
           <div *ngIf="emails.errors && emails.touched" class="form-error">
@@ -28,8 +33,7 @@
             <filter-options [form]="bulkEmailForm"
                             [labels]="labelData"
                             [folders]="folderData"
-                            [domains]="domainData"
-                            (filterChecked)="onFilterChange($event)">
+                            [domains]="domainData">
             </filter-options>
         </div>
         <div class="form-group" formGroupName="applyTo">
@@ -48,6 +52,17 @@
                   [disabled]="!bulkEmailForm.valid">
             Submit
           </button>
+          <button mat-stroked-button
+                  color="accent"
+                  type="button"
+                  class="form-reset"
+                  (click)="resetForm()">
+            Reset
+          </button>
+          <mat-spinner *ngIf="showSpinner"
+                       [diameter]="25"
+                       [strokeWidth]="4">
+          </mat-spinner>
         </div>
       </form>
     </mat-card>

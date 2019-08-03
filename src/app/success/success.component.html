@@ -1,0 +1,15 @@
+<mat-card *ngIf="show"
+          class="results animated"
+          [class.fadeIn]="show">
+    <mat-icon class="close" (click)="onCloseClick()">close</mat-icon>
+    <mat-card-title *ngIf="message.length">SUCCESS</mat-card-title>
+    <mat-card-title *ngIf="!message.length">NOTHING TO UPDATE</mat-card-title>
+    <mat-card-content>
+        <ul *ngIf="message.length">
+            <li *ngFor="let item of message">{{ item }}</li>
+        </ul>
+        <p *ngIf="!message.length">
+            Heads up! No updates were made to any items you selected. This could be due to your filter selections or it could be that the selected items did not need updating. Please adjust your selections and try again.
+        </p>
+    </mat-card-content>
+</mat-card>

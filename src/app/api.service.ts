@@ -40,4 +40,94 @@ export class ApiService {
     return this.http.get(this.url + 'domains', httpOptions);
   }
 
+  getAudits(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'web-audits', httpOptions);
+  }
+
+  getWebJourneys(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'web-journeys', httpOptions);
+  }
+
+  getMobileApps(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'apps', httpOptions);
+  }
+
+  getRules(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'rules', httpOptions);
+  }
+
+  getWebJourneyActions(key: string, journeyId) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'web-journeys/' + journeyId, httpOptions);
+  }
+
+  updateAudit(key: string, audit) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.put(this.url + 'web-audits/' + audit.id, audit, httpOptions);
+  }
+
+  updateWebJourney(key: string, journey) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.put(this.url + 'web-journeys/' + journey.id, journey, httpOptions);
+  }
+
+  updateApp(key: string, app) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.put(this.url + 'apps/' + app.id, app, httpOptions);
+  }
+
+  updateRule(key: string, rule) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.put(this.url + 'rules/' + rule.id, rule, httpOptions);
+  }
+
 }

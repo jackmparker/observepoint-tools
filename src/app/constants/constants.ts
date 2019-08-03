@@ -42,3 +42,14 @@ export const TOOL_NAMES = {
         DESCRIPTION: 'Easily enable or disable the new Chrome engines in bulk for your web audits or web journeys. Options to filter by folder or domain are included.'
     }
 }
+
+export const ITEM_TYPES = {
+    AUDIT: 'audit',
+    WEB_JOURNEY: 'web-journey',
+    APP: 'app',
+    APP_JOURNEY: 'app-journey',
+    RULE: 'rule',
+    LABELS: 'labels',
+    FOLDERS: 'folders',
+    DOMAINS: 'domains'
+}

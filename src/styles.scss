@@ -14,11 +14,12 @@ html {
 	font-family: 'Roboto', sans-serif;
 	line-height: 23px;
 	background-color: #e7e7e7;
-	padding-top: 115px;
+	padding-top: 107px;
+	scroll-behavior: smooth;
 }
 
 body {
-	padding-bottom: 50px;
+	padding-bottom: 30px;
 }
 
 .outer-wrap {
@@ -56,11 +57,11 @@ mat-card {
 	&.tool-container {
 		padding: 30px;
 
-		mat-card-title {
+		.tool-title {
 			color: $yellow;
 		}
 
-		mat-card-content {
+		.tool-description {
 			margin-bottom: 50px;
 		}
 	}
@@ -100,6 +101,11 @@ mat-card {
 	.form-submit-container {
 		display: flex;
 		flex-direction: row-reverse;
+		align-items: center;
+
+		mat-spinner {
+			margin-right: 10px;
+		}
 	}
 }
 

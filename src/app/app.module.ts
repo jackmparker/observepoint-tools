@@ -27,6 +27,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { FilterOptionsComponent } from './filter-options/filter-options.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FilterPipe } from './filter.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SuccessComponent } from './success/success.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,8 @@ import { FilterPipe } from './filter.pipe';
     AddProfileComponent,
     ProfileEditorComponent,
     FilterOptionsComponent,
-    FilterPipe
+    FilterPipe,
+    SuccessComponent
   ],
   imports: [
     FormsModule,
@@ -59,7 +62,8 @@ import { FilterPipe } from './filter.pipe';
     MatSortModule,
     ReactiveFormsModule,
     MatExpansionModule,
-    MatTabsModule
+    MatTabsModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     Title,

@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, IterableDiffers } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { TOOL_NAMES } from '../constants/constants';
+import { TOOL_NAMES, ITEM_TYPES } from '../constants/constants';
 import { FormBuilder, Validators, FormGroup, AbstractControl, FormArray } from '@angular/forms';
 import { IProfileModel } from '../interfaces/interfaces';
 import { ProfileService } from '../profile-service.service';
 import { ApiService } from '../api.service';
 import { ToolValidators } from '../validators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'bulk-email',
@@ -21,12 +23,29 @@ export class BulkEmailComponent implements OnInit {
   bulkEmailForm: FormGroup;
   addRemoveSelection: string = 'Add emails to:';
   labelData: any;
-  labelsSelected: boolean = false;
   folderData: any;
-  foldersSelected: boolean = false;
   domainData: any;
-  domainsSelected: boolean = false;
-
+  audits: any;
+  journeys: any;
+  apps: any;
+  rules: any;
+  apiKey: string;
+  filterBy: string;
+  filterList: Array<number>;
+  emailsToAddRemove: Array<string>;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  updatedItems = {
+    audits: 0,
+    journeys: 0,
+    apps: 0,
+    rules: 0
+  }
+  noItemsToFilter: number = 0;
+  numCallsMade: number = 0;
+  numCallsCompleted: number = 0;
+  showSpinner: boolean = false;
+  showSuccess: boolean = false;
+  successMessage: Array<string> = [];
 
   constructor(
     private titleService: Title,
@@ -44,17 +63,18 @@ export class BulkEmailComponent implements OnInit {
       key: [null, Validators.required],
       profile: [null, Validators.required],
       emails: [null, [Validators.required, ToolValidators.emails]],
-      labels: [[], Validators.required],
-      folders: this.fb.array([]),
-      domains: this.fb.array([]),
-      applyTo: this.fb.group({
-        audits: [null],
-        journeys: [null],
-        apps: [null],
-        rules: [null]
+      filters: this.fb.group({
+        labels: [[]],
+        folders: [[]],
+        domains: [[]]
       }),
-      checkboxValidator: [null, Validators.required],
-      labelSearchText: [null]
+      applyTo: this.fb.group({
+        audits: [false],
+        journeys: [false],
+        apps: [false],
+        rules: [false]
+      }),
+      checkboxValidator: [false, Validators.required]
     });
 
     if(this.profiles.length) {
@@ -64,7 +84,7 @@ export class BulkEmailComponent implements OnInit {
       this.profile.disable();
     }
 
-    this.addRemove.valueChanges.subscribe(change => {
+    this.addRemove.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(change => {
       this.addRemoveSelection = change == 'add' ? 'Add emails to:' : 'Remove emails from:';
     });
 
@@ -75,10 +95,6 @@ export class BulkEmailComponent implements OnInit {
         this.checkboxValidator.patchValue(null);
       }
     });
-
-    this.bulkEmailForm.valueChanges.subscribe(() => {
-      console.log(this.bulkEmailForm);
-    });
   }
 
   private setTitle(title: string): void {
@@ -86,15 +102,13 @@ export class BulkEmailComponent implements OnInit {
   }
 
   getFilters(key: string): void {
+    this.apiKey = key;
     
     // labels
     this.apiService.getLabels(key).subscribe(
       data => {
-        console.log(data);
-        console.log(typeof data);
         this.labelData = data;
         this.labelData.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
-        this.addFilters(this.labelData, this.labels);
       },
       error => {
         this.handleError(error);
@@ -106,7 +120,6 @@ export class BulkEmailComponent implements OnInit {
       data => {
         this.folderData = data;
         this.folderData.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
-        this.addFilters(this.folderData, this.folders);
       },
       error => {
         this.handleError(error);
@@ -118,7 +131,6 @@ export class BulkEmailComponent implements OnInit {
       data => {
         this.domainData = data;
         this.domainData.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
-        this.addFilters(this.domainData, this.domains);
       },
       error => {
         this.handleError(error);
@@ -127,13 +139,7 @@ export class BulkEmailComponent implements OnInit {
 
   }
 
-  addFilters(filters: Array<any>, field: any): void {
-    filters.map(() => {
-      field.push(this.fb.control(false));
-    });
-  }
-
-  handleError(error) {
+  private handleError(error) {
     if(error.error.errorCode === 1) {
       if(this.profiles.length) {
         this.profile.setErrors({ invalidApiKey: true });
@@ -144,7 +150,421 @@ export class BulkEmailComponent implements OnInit {
   }
 
   onSubmit(form) {
-    console.log(form.value);
+    this.successMessage = [];
+    this.showSuccess = false;
+    this.showSpinner = true;
+    let values = form.value;
+
+    this.setFilterOptions();
+    this.emailsToAddRemove = values.emails.split('\n').map(e => e.trim()).filter(e => e !== '');
+
+    if(values.applyTo.audits) this.processAudits();
+    if(values.applyTo.journeys) this.processWebJourneys();
+    if(values.applyTo.apps) this.processApps();
+    if(values.applyTo.rules) this.processRules();
+  }
+
+  private processAudits(): void {
+    this.apiService.getAudits(this.apiKey).subscribe(audits => {
+      this.audits = audits;
+
+      if(this.audits.length) {
+        this.audits = this.filterAudits(this.audits);
+
+        if(this.audits.length) {
+          this.updateAudits(this.audits);
+        } else {
+          this.noItemsToFilter++;
+          this.checkIfComplete();
+        }
+      } else {
+        this.noItemsToFilter++;
+          this.checkIfComplete();
+      }
+    });
+  }
+
+  private processWebJourneys(): void {
+    this.apiService.getWebJourneys(this.apiKey).subscribe(journeys => {
+      this.journeys = journeys;
+
+      if(this.journeys.length) {
+        this.journeys = this.filterWebJourneys(this.journeys);
+
+        if(this.journeys.length) {
+          this.updateWebJourneys(this.journeys);
+        } else {
+          this.noItemsToFilter++;
+          this.checkIfComplete();
+        }
+      } else {
+        this.noItemsToFilter++;
+        this.checkIfComplete();
+      }
+    });
+  }
+
+  private processApps(): void {
+    this.apiService.getMobileApps(this.apiKey).subscribe(apps => {
+      this.apps = apps;
+
+      if(this.apps.length) {
+        this.apps = this.filterApps(this.apps);
+
+        if(this.apps.length) {
+          this.updateApps(this.apps);
+        } else {
+          this.noItemsToFilter++;
+          this.checkIfComplete();
+        }
+      } else {
+        this.noItemsToFilter++;
+        this.checkIfComplete();
+      }
+    });
+  }
+
+  private processRules(): void {
+    this.apiService.getRules(this.apiKey).subscribe(rules => {
+      this.rules = rules;
+
+      // remove pre-defined rules
+      if(this.rules.length) this.rules = this.rules.filter(rule => rule.fromTemplate === false);
+
+      if(this.rules.length) {
+        this.rules = this.filterRules(this.rules);
+        
+        if(this.rules.length) {
+          this.updateRules(this.rules);
+        } else {
+          this.noItemsToFilter++;
+          this.checkIfComplete();
+        }
+      } else {
+        this.noItemsToFilter++;
+        this.checkIfComplete();
+      }
+    });
+  }
+
+  private filterAudits(audits) {
+    // first filter based on criteria chosen by user
+    // only if they've chosen a filter
+    if(this.getFilterType()) {
+      audits = audits.filter(audit => {
+      
+        if(this.filterBy === ITEM_TYPES.LABELS) {
+          if(audit.labels) {
+            return audit.labels.find(label => this.filterList.indexOf(label.id) > -1);
+          }
+        }
+  
+        if(this.filterBy === ITEM_TYPES.FOLDERS) {
+          return (this.filterList.indexOf(audit.folderId) > -1);
+        }
+  
+        if(this.filterBy === ITEM_TYPES.DOMAINS) {
+          return (this.filterList.indexOf(audit.domainId) > -1);
+        }
+  
+      });
+    }
+
+    // then remove audits that don't need an update
+    return audits.filter(audit => {
+      let intersection = audit.recipients.filter(x => this.emailsToAddRemove.includes(x));
+
+      if(this.addRemove.value === 'add') {
+        if(intersection.length < this.emailsToAddRemove.length) {
+          return audit;
+        }
+      } else {
+        if(intersection.length !== 0 && intersection.length <= this.emailsToAddRemove.length) {
+          return audit;
+        }
+      }
+    });
+  }
+
+  private filterWebJourneys(journeys) {
+    // first filter based on criteria chosen by user
+    // only if they've chosen a filter
+    if(this.getFilterType()) {
+      journeys = journeys.filter(journey => {
+
+        if(this.filterBy === ITEM_TYPES.FOLDERS) {
+          return (this.filterList.indexOf(journey.folderId) > -1);
+        }
+  
+        if(this.filterBy === ITEM_TYPES.DOMAINS) {
+          return (this.filterList.indexOf(journey.domainId) > -1);
+        }
+  
+      });
+    }
+
+    // then remove journeys that don't need an update
+    return journeys.filter(journey => {
+      let intersection = journey.emails.filter(x => this.emailsToAddRemove.includes(x));
+
+      if(this.addRemove.value === 'add') {
+        if(intersection.length < this.emailsToAddRemove.length) {
+          return journey;
+        }
+      } else {
+        if(intersection.length !== 0 && intersection.length <= this.emailsToAddRemove.length) {
+          return journey;
+        }
+      }
+    });
+  }
+
+  private filterApps(apps) {
+    // first filter based on criteria chosen by user
+    // only if they've chosen a filter
+    if(this.getFilterType()) {
+      return apps.filter(app => {
+
+        if(this.filterBy === ITEM_TYPES.FOLDERS) {
+          return (this.filterList.indexOf(app.folderId) > -1);
+        }
+  
+      });
+    }
+
+    // then remove apps that don't need an update
+    return apps.filter(app => {
+      if(!app.recipients) app.recipients = [];
+      let intersection = app.recipients.filter(x => this.emailsToAddRemove.includes(x));
+      
+      if(this.addRemove.value === 'add') {
+        if(intersection.length < this.emailsToAddRemove.length) {
+          return app;
+        }
+      } else {
+        if(intersection.length !== 0 && intersection.length <= this.emailsToAddRemove.length) {
+          return app;
+        }
+      }
+    });
+  }
+
+  private filterRules(rules) {
+    // first filter based on criteria chosen by user
+    // only if they've chosen a filter
+    if(this.getFilterType()) {
+      rules = rules.filter(rule => {
+      
+        if(this.filterBy === ITEM_TYPES.LABELS) {
+          if(rule.labels) {
+            return rule.labels.find(label => this.filterList.indexOf(label.id) > -1);
+          }
+        }
+  
+      });
+    }
+
+    // then remove rules that don't need an update
+    return rules.filter(rule => {
+      let intersection = rule.recipients.filter(x => this.emailsToAddRemove.includes(x));
+      
+      if(this.addRemove.value === 'add') {
+        if(intersection.length < this.emailsToAddRemove.length) {
+          return rule;
+        }
+      } else {
+        if(intersection.length !== 0 && intersection.length <= this.emailsToAddRemove.length) {
+          return rule;
+        }
+      }
+    });
+  }
+
+  private updateAudits(audits): void {
+    audits.map(audit => {
+      if(this.addRemove.value === 'add') {
+        let emails = audit.recipients.concat(this.emailsToAddRemove);
+        let set = new Set(emails);
+        audit.recipients = [...set];
+      } else {
+        audit.recipients = audit.recipients.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
+      }
+
+      this.numCallsMade++;
+
+      this.apiService.updateAudit(this.apiKey, audit).subscribe(response => {
+        this.numCallsCompleted++;
+        this.updatedItems.audits++;
+        this.checkIfComplete();
+      });
+    });
+  }
+
+  private updateWebJourneys(journeys): void {
+    journeys.map(journey => {
+      if(this.addRemove.value === 'add') {
+        let emails = journey.emails.concat(this.emailsToAddRemove);
+        let set = new Set(emails);
+        journey.emails = [...set];
+      } else {
+        journey.emails = journey.emails.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
+      }
+
+      this.numCallsMade++;
+
+      this.apiService.getWebJourneyActions(this.apiKey, journey.id).subscribe(response => {
+        journey.actions = response['actions'];
+
+        this.apiService.updateWebJourney(this.apiKey, journey).subscribe(response => {
+          this.numCallsCompleted++;
+          this.updatedItems.journeys++;
+          this.checkIfComplete();
+        });
+      });
+    });
+  }
+
+  private updateApps(apps): void {
+    apps.map(app => {
+      if(this.addRemove.value === 'add') {
+        let emails = app.recipients.concat(this.emailsToAddRemove);
+        let set = new Set(emails);
+        app.recipients = [...set];
+      } else {
+        app.recipients = app.recipients.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
+      }
+
+      this.numCallsMade++;
+
+      this.apiService.updateApp(this.apiKey, app).subscribe(response => {
+        this.numCallsCompleted++;
+        this.updatedItems.apps++;
+        this.checkIfComplete();
+      });
+    });
+  }
+
+  private updateRules(rules): void {
+    rules.map(rule => {
+      if(this.addRemove.value === 'add') {
+        let emails = rule.recipients.concat(this.emailsToAddRemove);
+        let set = new Set(emails);
+        rule.recipients = [...set];
+      } else {
+        rule.recipients = rule.recipients.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
+      }
+
+      this.numCallsMade++;
+
+      this.apiService.updateRule(this.apiKey, rule).subscribe(response => {
+        this.numCallsCompleted++;
+        this.updatedItems.rules++;
+        this.checkIfComplete();
+      });
+    });
+  }
+
+  private setFilterOptions(): void {
+    this.filterBy = this.getFilterType();
+    if(this.filterBy) {
+      this.filterList = this.filters.value[this.filterBy].map(filter => filter.id);
+    }
+  }
+
+  private getFilterType(): string {
+    let filters = this.filters.value;
+    
+    if(filters.labels.length) return ITEM_TYPES.LABELS;
+    if(filters.folders.length) return ITEM_TYPES.FOLDERS;
+    if(filters.domains.length) return ITEM_TYPES.DOMAINS;
+    
+    return null;
+  }
+
+  private checkIfComplete(): void {
+    if(this.noItemsToFilter) {
+      let applyToCount = this.getApplyToCount();
+      if(this.noItemsToFilter === applyToCount) {
+        
+        console.log('no items to update');
+
+        this.showSpinner = false;
+        this.displayResults();
+      }
+    } else {
+      if(this.numCallsMade === this.numCallsCompleted) {
+        
+        console.log('some items were updated');
+
+        this.showSpinner = false;
+        this.displayResults();
+      }
+    }
+  }
+
+  private getApplyToCount() {
+    let count: number = 0;
+    let applyTo: any = this.applyTo.value;
+
+    Object.keys(applyTo).map((key) => {
+      if(applyTo[key] === true) count++;
+    });
+
+    return count;
+  }
+
+  private displayResults(): void {
+    this.generateSuccessMessage();
+    
+    window.scroll({
+      top: 0, 
+      left: 0, 
+      behavior: 'smooth'
+    });
+
+    setTimeout(() => {
+      this.showSuccess = true;
+    }, 500);
+
+    this.resetVariables();
+  }
+
+  private generateSuccessMessage() {
+    let numAudits = this.updatedItems.audits;
+    if(numAudits) {
+      this.successMessage.push('Updated ' + numAudits + ' web audits');
+    }
+
+    let numJourneys = this.updatedItems.journeys;
+    if(numJourneys) {
+      this.successMessage.push('Updated ' + numJourneys + ' web journeys');
+    }
+
+    let numApps = this.updatedItems.apps;
+    if(numApps) {
+      this.successMessage.push('Updated ' + numApps + ' apps');
+    }
+
+    let numRules = this.updatedItems.rules;
+    if(numRules) {
+      this.successMessage.push('Updated ' + numRules + ' rules');
+    }
+  }
+
+  private resetVariables() {
+    this.noItemsToFilter = 0;
+    this.numCallsMade = 0;
+    this.numCallsCompleted = 0;
+    this.updatedItems = {
+      audits: 0,
+      journeys: 0,
+      apps: 0,
+      rules: 0
+    }
+  }
+
+  resetForm() {
+    this.bulkEmailForm.reset();
   }
 
   get addRemove() { 
@@ -168,15 +588,19 @@ export class BulkEmailComponent implements OnInit {
   }
 
   get labels() {
-    return this.bulkEmailForm.get('labels') as FormArray;
+    return this.bulkEmailForm.get('labels');
   }
 
   get folders() {
-    return this.bulkEmailForm.get('folders') as FormArray;
+    return this.bulkEmailForm.get('folders');
   }
 
   get domains() {
-    return this.bulkEmailForm.get('domains') as FormArray;
+    return this.bulkEmailForm.get('domains');
+  }
+
+  get filters() {
+    return this.bulkEmailForm.get('filters');
   }
 
   get applyTo() {
