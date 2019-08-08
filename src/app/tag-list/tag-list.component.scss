@@ -1,0 +1,65 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+
+    .getting-tags {
+        padding: 0 0 40px;
+        display: flex;
+        color: $secondary;
+        font-style: italic;
+        font-size: 13px;
+        flex-direction: column;
+
+        mat-progress-bar {
+            margin-top: 10px;
+        }
+    }
+
+    .table-wrap {
+        margin-top: 30px;
+
+        .filter-button {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: space-between;
+
+            .copy-button {
+                width: 35%;
+
+                .copy-icon {
+                    height: auto;
+                    width: auto;
+                    font-size: 19px;
+                    position: relative;
+                    top: -1px;
+                }
+            }
+
+            .search {
+                position: relative;
+                width: 50%;
+
+                .search-field {
+                    margin-left: 25px;
+                }
+
+                .search-icon {
+                    color: #ddd;
+                    position: absolute;
+                    top: 21px;
+                    left: 0;
+                    font-size: 25px;
+                }
+
+                .mat-form-field {
+                    width: 100%;
+                }
+            }
+        }
+    
+        table {
+            width: 100%;
+        }
+    }
+}

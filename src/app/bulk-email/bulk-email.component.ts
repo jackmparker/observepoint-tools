@@ -1,7 +1,7 @@
-import { Component, OnInit, IterableDiffers } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TOOL_NAMES, ITEM_TYPES } from '../constants/constants';
-import { FormBuilder, Validators, FormGroup, AbstractControl, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { IProfileModel } from '../interfaces/interfaces';
 import { ProfileService } from '../profile-service.service';
 import { ApiService } from '../api.service';
@@ -74,7 +74,7 @@ export class BulkEmailComponent implements OnInit {
         apps: [false],
         rules: [false]
       }),
-      checkboxValidator: [false, Validators.required]
+      checkboxValidator: [null, Validators.required]
     });
 
     if(this.profiles.length) {
@@ -84,11 +84,15 @@ export class BulkEmailComponent implements OnInit {
       this.profile.disable();
     }
 
-    this.addRemove.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(change => {
+    this.addRemove.valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(change => {
       this.addRemoveSelection = change == 'add' ? 'Add emails to:' : 'Remove emails from:';
     });
 
-    this.applyTo.valueChanges.subscribe(change => {
+    this.applyTo.valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(change => {
       if(Object.values(change).indexOf(true) > -1) {
         this.checkboxValidator.patchValue(true);
       } else {
@@ -143,8 +147,10 @@ export class BulkEmailComponent implements OnInit {
     if(error.error.errorCode === 1) {
       if(this.profiles.length) {
         this.profile.setErrors({ invalidApiKey: true });
+        this.profile.markAsTouched();
       } else {
         this.key.setErrors({ invalidApiKey: true });
+        this.profile.markAsTouched();
       }
     }
   }
@@ -254,8 +260,18 @@ export class BulkEmailComponent implements OnInit {
       audits = audits.filter(audit => {
       
         if(this.filterBy === ITEM_TYPES.LABELS) {
-          if(audit.labels) {
-            return audit.labels.find(label => this.filterList.indexOf(label.id) > -1);
+          let labels = this.filters.value[this.filterBy];
+
+          let matches = labels.filter(label => {
+            if(label.audits.length) {
+              if(label.audits.indexOf(audit.id) > -1) {
+                return audit;
+              }
+            }
+          });
+
+          if(matches.length) {
+            return audit;
           }
         }
   
@@ -291,6 +307,22 @@ export class BulkEmailComponent implements OnInit {
     // only if they've chosen a filter
     if(this.getFilterType()) {
       journeys = journeys.filter(journey => {
+
+        if(this.filterBy === ITEM_TYPES.LABELS) {
+          let labels = this.filters.value[this.filterBy];
+
+          let matches = labels.filter(label => {
+            if(label.webJourney.length) {
+              if(label.webJourney.indexOf(journey.id) > -1) {
+                return journey;
+              }
+            }
+          });
+
+          if(matches.length) {
+            return journey;
+          }
+        }
 
         if(this.filterBy === ITEM_TYPES.FOLDERS) {
           return (this.filterList.indexOf(journey.folderId) > -1);
@@ -356,8 +388,18 @@ export class BulkEmailComponent implements OnInit {
       rules = rules.filter(rule => {
       
         if(this.filterBy === ITEM_TYPES.LABELS) {
-          if(rule.labels) {
-            return rule.labels.find(label => this.filterList.indexOf(label.id) > -1);
+          let labels = this.filters.value[this.filterBy];
+
+          let matches = labels.filter(label => {
+            if(label.rules.length) {
+              if(label.rules.indexOf(rule.id) > -1) {
+                return rule;
+              }
+            }
+          });
+
+          if(matches.length) {
+            return rule;
           }
         }
   

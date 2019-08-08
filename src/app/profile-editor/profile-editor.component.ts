@@ -5,6 +5,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ProfileService } from '../profile-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddProfileComponent } from '../add-profile/add-profile.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-editor',
@@ -19,6 +21,7 @@ export class ProfileEditorComponent implements OnInit {
   displayedColumns: string[] = ['select', 'name', 'key', 'edit'];
   name: string;
   key: string;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private profileService: ProfileService,
@@ -65,7 +68,9 @@ export class ProfileEditorComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe((dialog: IProfileModel) => {
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((dialog: IProfileModel) => {
       if(dialog) {
         this.profiles.push(dialog);
         this.sortProfiles(this.profiles);
@@ -85,7 +90,9 @@ export class ProfileEditorComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe((dialog: IProfileModel) => {
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((dialog: IProfileModel) => {
       if(dialog) {
         let diff = this.dataSource.data.filter(x => ![profile].includes(x));
         diff.push(dialog);

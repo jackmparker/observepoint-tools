@@ -27,7 +27,7 @@ export const TOOL_NAMES = {
         DISPLAY_NAME: 'OBSERVEPOINT TAG DATABASE',
         PATH: '/tag-list',
         TITLE: 'Tag Database',
-        DESCRIPTION: 'Use this to get a full list of all tags in the ObservePoint tag database. Optionally hide tag IDs and icons.'
+        DESCRIPTION: 'Use this to get a full list of all tags in the ObservePoint tag database. Optionally copy a list of all tag names.'
     },
     BEARER_TOKEN: {
         DISPLAY_NAME: 'BEARER TOKEN GENERATOR',

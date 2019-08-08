@@ -130,4 +130,8 @@ export class ApiService {
     return this.http.put(this.url + 'rules/' + rule.id, rule, httpOptions);
   }
 
+  getTags() {
+    return this.http.get('https://desolate-bastion-45562.herokuapp.com/');
+  }
+
 }

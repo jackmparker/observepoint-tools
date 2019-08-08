@@ -5,6 +5,8 @@ import { AddProfileComponent } from '../add-profile/add-profile.component';
 import { ProfileService } from '../profile-service.service';
 import { EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'profile-selector',
@@ -19,6 +21,7 @@ export class ProfileSelectorComponent implements OnInit {
   name: string;
   key: string;
   profiles: IProfileModel[];
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     public dialog: MatDialog,
@@ -41,7 +44,9 @@ export class ProfileSelectorComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(dialog => {
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(dialog => {
       if(dialog) {
         let newKey: IProfileModel = {
           name: dialog.name,
@@ -50,6 +55,8 @@ export class ProfileSelectorComponent implements OnInit {
   
         this.profiles.push(newKey);
         this.profileService.updateProfiles(this.profiles);
+        this.apiKey.patchValue(newKey.key);
+        this.onKeyChosen();
       }
     });
   }
