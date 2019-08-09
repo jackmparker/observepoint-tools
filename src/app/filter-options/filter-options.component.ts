@@ -23,6 +23,8 @@ export class FilterOptionsComponent implements OnChanges{
 
   showTabs: boolean = false;
 
+  searchText: any;
+
   ngOnChanges(changes: SimpleChanges) {
     this.gotLabelData = changes.labels && changes.labels.currentValue;
     this.gotFolderData = changes.folders && changes.folders.currentValue;
