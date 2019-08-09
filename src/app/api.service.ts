@@ -134,4 +134,8 @@ export class ApiService {
     return this.http.get('https://desolate-bastion-45562.herokuapp.com/');
   }
 
+  login(creds) {
+    return this.http.post('https://auth.observepoint.com/login', creds);
+  }
+
 }

@@ -4,13 +4,15 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { BulkEmailComponent } from './bulk-email/bulk-email.component';
 import { ProfileEditorComponent } from './profile-editor/profile-editor.component';
 import { TagListComponent } from './tag-list/tag-list.component';
+import { BearerTokenGeneratorComponent } from './bearer-token-generator/bearer-token-generator.component';
 
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
   { path: 'bulk-email', component: BulkEmailComponent },
   { path: 'manage-profiles', component: ProfileEditorComponent },
-  { path: 'tag-list', component: TagListComponent }
+  { path: 'tag-list', component: TagListComponent },
+  { path: 'bearer-token', component: BearerTokenGeneratorComponent }
 ];
 
 @NgModule({

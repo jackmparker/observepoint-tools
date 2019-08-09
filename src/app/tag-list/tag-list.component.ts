@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ApiService } from '../api.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ITagModel, ILoginResponseModel, ITagSimpleModel } from '../interfaces/interfaces';
+import { ITagModel, ITagSimpleModel } from '../interfaces/interfaces';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({

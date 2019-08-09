@@ -1,0 +1,49 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+    mat-card {
+        padding-bottom: 50px;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+
+    .button-flex {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: baseline;
+
+        button {
+            margin-top: 15px;
+        }
+
+        small {
+            padding-right: 10px;
+            color: #999;
+        }
+    }
+
+    .monospaced {
+        user-select: all;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        max-width: 653px;
+        padding: 15px;
+        font-family: monospace;
+        white-space: nowrap;
+        font-size: 14px;
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+
+    .error {
+        background-color: $warn-background;
+        color: #555;
+        padding: 10px;
+        font-size: 13px;
+        font-style: italic;
+        border: 1px solid #f00000;
+        margin-bottom: 20px;
+    }
+}

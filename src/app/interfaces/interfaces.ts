@@ -38,3 +38,26 @@ export interface ILoginResponseModel {
     credentialsExpired: boolean;
     userId: number;
 }
+
+export interface IErrorResponseModel {
+    error: IErrorSubModel;
+    headers: IErrorHeadersModel;
+    message: string;
+    name: string;
+    ok: boolean;
+    status: number;
+    statusText: string;
+    url: string;
+}
+
+export interface IErrorSubModel {
+    details: string;
+    message: string;
+    timestamp: string;
+}
+
+export interface IErrorHeadersModel {
+    lazyInit: any;
+    lazyUpdate: any;
+    normalizedNames?: any;
+}

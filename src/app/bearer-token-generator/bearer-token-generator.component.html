@@ -1,0 +1,46 @@
+<div class="outer-wrap flex">
+        <sidebar current="{{ sidebar }}"></sidebar>
+        <div class="main">
+          <mat-card class="tool-container">
+            <mat-card-title class="tool-title">{{ title }}</mat-card-title>
+            <mat-card-content class="tool-description">{{ description }}</mat-card-content>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)" *ngIf="!token">
+                <div *ngIf="errorMessage" class="error">
+                    {{ errorMessage}}
+                </div>
+                <mat-form-field>
+                    <input matInput
+                           formControlName="username"
+                           placeholder="ObservePoint Username">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput
+                           formControlName="password"
+                           placeholder="ObservePoint Password"
+                           type="password">
+                </mat-form-field>
+                <div class="button-flex">
+                    <button mat-flat-button color="primary">Generate Bearer Token</button>
+                </div>
+            </form>
+
+            <div *ngIf="token" class="token">
+                <div class="monospaced">
+                    {{ token }}
+                </div>
+                <div class="button-flex">
+                    <button mat-flat-button
+                            color="primary"
+                            ngxClipboard
+                            cbContent="{{ token }}"
+                            (click)="showCopyMessage()">
+                        Copy to Clipboard
+                    </button>
+                    <small *ngIf="copied">Copied!</small>
+                </div>
+            </div>
+
+          </mat-card>
+        </div>
+      </div>

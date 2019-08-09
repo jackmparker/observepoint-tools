@@ -31,6 +31,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SuccessComponent } from './success/success.component';
 import { TagListComponent } from './tag-list/tag-list.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { BearerTokenGeneratorComponent } from './bearer-token-generator/bearer-token-generator.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     FilterOptionsComponent,
     FilterPipe,
     SuccessComponent,
-    TagListComponent
+    TagListComponent,
+    BearerTokenGeneratorComponent
   ],
   imports: [
     FormsModule,
@@ -67,7 +70,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatExpansionModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ClipboardModule
   ],
   providers: [
     Title,

@@ -33,7 +33,7 @@ export const TOOL_NAMES = {
         DISPLAY_NAME: 'BEARER TOKEN GENERATOR',
         PATH: '/bearer-token',
         TITLE: 'Bearer Token Generator',
-        DESCRIPTION: 'Get a bearer token for the current day.'
+        DESCRIPTION: 'Use your ObservePoint login credentials to generate a bearer token for the current day.'
     },
     CHROME_ENGINE: {
         DISPLAY_NAME: 'CHROME ENGINE TOGGLER',
