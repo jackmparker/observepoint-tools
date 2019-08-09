@@ -117,8 +117,13 @@
               "devServerTarget": "observepoint-tools:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "observepoint-tools"
 }
