@@ -1,0 +1,104 @@
+<div class="outer-wrap flex">
+    <sidebar current="{{ sidebar }}"></sidebar>
+    <div class="main">
+      <mat-card class="tool-container">
+        <mat-card-title class="tool-title">{{ title }}</mat-card-title>
+        <mat-card-content class="tool-description">{{ description }}</mat-card-content>
+
+        <div *ngIf="!folderIds && !domainIds" class="form-wrap">
+            <profile-selector [form]="apiKeyForm">
+            </profile-selector>
+            <div class="button-wrap">
+                <button (click)="getIds()"
+                        mat-flat-button
+                        color="primary">
+                    Get IDs
+                </button>
+                <mat-spinner *ngIf="showSpinner"
+                             [diameter]="25"
+                             [strokeWidth]="4">
+                </mat-spinner>
+            </div>
+        </div>
+
+        <mat-accordion multi="true" [hidden]="!folderIds && !domainIds">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Folder IDs
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="search-download">
+                    <div class="search">
+                        <mat-icon class="search-icon">search</mat-icon>
+                        <mat-form-field class="search-field">
+                            <input matInput autocomplete="off" (keyup)="folderFilter($event.target.value)" placeholder="Search Folders">
+                        </mat-form-field>
+                    </div>
+                    <button mat-flat-button color="primary" type="button" (click)="downloadFolderCSV()" class="copy-button">
+                        <mat-icon class="copy-icon">cloud_download</mat-icon>
+                        Download CSV
+                    </button>
+                </div>
+                <table mat-table [dataSource]="folderDataSource" matSort #folderSort="matSort">
+    
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Folder Name</th>
+                        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+                    </ng-container>
+                    
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+                    </ng-container>
+                
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        
+                </table>
+            </mat-expansion-panel>
+    
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Domain IDs
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="search-download">
+                    <div class="search">
+                        <mat-icon class="search-icon">search</mat-icon>
+                        <mat-form-field class="search-field">
+                            <input matInput autocomplete="off" (keyup)="domainFilter($event.target.value)" placeholder="Search Domains">
+                        </mat-form-field>
+                    </div>
+                    <button mat-flat-button color="primary" type="button" (click)="downloadDomainCSV()" class="copy-button">
+                        <mat-icon class="copy-icon">cloud_download</mat-icon>
+                        Download CSV
+                    </button>
+                </div>
+                <table mat-table [dataSource]="domainDataSource" matSort #domainSort="matSort">
+    
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Domain Name</th>
+                        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+                    </ng-container>
+                    
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+                    </ng-container>
+                
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        
+                </table>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+      </mat-card>
+    </div>
+  </div>

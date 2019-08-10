@@ -5,7 +5,6 @@ import { ApiService } from '../api.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ITagModel, ITagSimpleModel } from '../interfaces/interfaces';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'tag-list',
@@ -25,8 +24,7 @@ export class TagListComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(private titleService: Title,
-              private apiService: ApiService,
-              public dialog: MatDialog) { }
+              private apiService: ApiService) { }
 
   ngOnInit() {
     this.setTitle(TOOL_NAMES.TAG_LIST.TITLE);

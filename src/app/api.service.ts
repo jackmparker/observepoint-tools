@@ -138,4 +138,24 @@ export class ApiService {
     return this.http.post('https://auth.observepoint.com/login', creds);
   }
 
+  getFolderIds(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'folders', httpOptions);
+  }
+
+  getDomainIds(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'domains', httpOptions);
+  }
+
 }

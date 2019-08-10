@@ -19,6 +19,12 @@ export const tools: IToolsModel[] = [
       path: TOOL_NAMES.BEARER_TOKEN.PATH,
       description: TOOL_NAMES.BEARER_TOKEN.DESCRIPTION,
       title: TOOL_NAMES.BEARER_TOKEN.TITLE
+    },
+    {
+      name: TOOL_NAMES.FOLDER_DOMAIN_IDS.DISPLAY_NAME,
+      path: TOOL_NAMES.FOLDER_DOMAIN_IDS.PATH,
+      description: TOOL_NAMES.FOLDER_DOMAIN_IDS.DESCRIPTION,
+      title: TOOL_NAMES.FOLDER_DOMAIN_IDS.TITLE
     }
     // {
     //   name: TOOL_NAMES.BULK_ITEM_DELETER.DISPLAY_NAME,

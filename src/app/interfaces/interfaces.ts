@@ -61,3 +61,8 @@ export interface IErrorHeadersModel {
     lazyUpdate: any;
     normalizedNames?: any;
 }
+
+export interface IFolderDomainIdModel {
+    name: string;
+    id: number;
+}

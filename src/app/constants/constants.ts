@@ -40,6 +40,12 @@ export const TOOL_NAMES = {
         PATH: '/chrome-engine-toggler',
         TITLE: 'Chrome Engine Toggler',
         DESCRIPTION: 'Easily enable or disable the new Chrome engines in bulk for your web audits or web journeys. Options to filter by folder or domain are included.'
+    },
+    FOLDER_DOMAIN_IDS : {
+        DISPLAY_NAME: 'RETRIEVE FOLDER & DOMAIN IDs',
+        PATH: '/folder-domain-ids',
+        TITLE: 'Retrieve Folder & Domain IDs',
+        DESCRIPTION: 'Retrieve all folder and domain IDs in an account.'
     }
 }
 

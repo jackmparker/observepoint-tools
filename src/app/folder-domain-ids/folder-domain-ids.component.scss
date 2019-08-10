@@ -1,0 +1,44 @@
+:host {
+
+    .button-wrap {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+    }
+
+    .search-download {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+
+        .search {
+            position: relative;
+            width: 65%;
+    
+            .mat-form-field {
+                width: 100%;
+            }
+    
+            .search-field {
+                padding-left: 25px;
+                box-sizing: border-box;
+            }
+    
+            .search-icon {
+                color: #ddd;
+                position: absolute;
+                top: 19px;
+                left: 0;
+                font-size: 25px;
+            }
+        }
+    }
+
+    table {
+        width: 100%;
+    }
+
+    mat-spinner {
+        margin-right: 10px;
+    }
+}

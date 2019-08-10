@@ -33,6 +33,7 @@ import { TagListComponent } from './tag-list/tag-list.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BearerTokenGeneratorComponent } from './bearer-token-generator/bearer-token-generator.component';
 import { ClipboardModule } from 'ngx-clipboard';
+import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ClipboardModule } from 'ngx-clipboard';
     FilterPipe,
     SuccessComponent,
     TagListComponent,
-    BearerTokenGeneratorComponent
+    BearerTokenGeneratorComponent,
+    FolderDomainIdsComponent
   ],
   imports: [
     FormsModule,
