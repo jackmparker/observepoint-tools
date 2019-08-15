@@ -16,6 +16,7 @@ export class BearerTokenGeneratorComponent implements OnInit {
   sidebar: string = TOOL_NAMES.BEARER_TOKEN.PATH;
   description: string = TOOL_NAMES.BEARER_TOKEN.DESCRIPTION;
   loginForm: FormGroup;
+  showSpinner: boolean = false;
   token: string;
   errorMessage: string;
   copied: boolean = false;
@@ -37,10 +38,12 @@ export class BearerTokenGeneratorComponent implements OnInit {
   }
 
   onSubmit(form) {
+    this.showSpinner = true;
     this.apiService.login(form.value).subscribe(
       (response: ILoginResponseModel) => {
         this.token = 'Bearer ' + response.accessToken;
       }, (error: IErrorResponseModel) => {
+        this.showSpinner = false;
         if(error.status === 401) {
           this.errorMessage = 'The username or password is invalid';
         } else {

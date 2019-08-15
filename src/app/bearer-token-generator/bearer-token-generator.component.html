@@ -21,7 +21,13 @@
                            type="password">
                 </mat-form-field>
                 <div class="button-flex">
-                    <button mat-flat-button color="primary">Generate Bearer Token</button>
+                    <button mat-flat-button color="primary">
+                        Generate Bearer Token
+                    </button>
+                    <mat-spinner *ngIf="showSpinner"
+                                 [diameter]="25"
+                                 [strokeWidth]="4">
+                    </mat-spinner>
                 </div>
             </form>
 
@@ -35,6 +41,7 @@
                             ngxClipboard
                             cbContent="{{ token }}"
                             (click)="showCopyMessage()">
+                        <mat-icon class="copy-icon">attach_file</mat-icon>
                         Copy to Clipboard
                     </button>
                     <small *ngIf="copied">Copied!</small>
