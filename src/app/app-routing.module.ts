@@ -6,6 +6,7 @@ import { ProfileEditorComponent } from './profile-editor/profile-editor.componen
 import { TagListComponent } from './tag-list/tag-list.component';
 import { BearerTokenGeneratorComponent } from './bearer-token-generator/bearer-token-generator.component';
 import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.component';
+import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
 
 
 const routes: Routes = [
@@ -14,7 +15,8 @@ const routes: Routes = [
   { path: 'manage-profiles', component: ProfileEditorComponent },
   { path: 'tag-list', component: TagListComponent },
   { path: 'bearer-token', component: BearerTokenGeneratorComponent },
-  { path: 'folder-domain-ids', component: FolderDomainIdsComponent }
+  { path: 'folder-domain-ids', component: FolderDomainIdsComponent },
+  { path: 'audit-reports', component: AggregatedAuditReportsComponent }
 ];
 
 @NgModule({

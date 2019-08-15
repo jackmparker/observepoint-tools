@@ -1,6 +1,7 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import 'hammerjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,6 +35,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BearerTokenGeneratorComponent } from './bearer-token-generator/bearer-token-generator.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.component';
+import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -50,7 +54,8 @@ import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.
     SuccessComponent,
     TagListComponent,
     BearerTokenGeneratorComponent,
-    FolderDomainIdsComponent
+    FolderDomainIdsComponent,
+    AggregatedAuditReportsComponent
   ],
   imports: [
     FormsModule,
@@ -73,7 +78,9 @@ import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.
     MatTabsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    ClipboardModule
+    ClipboardModule,
+    MatSlideToggleModule,
+    MatStepperModule
   ],
   providers: [
     Title,

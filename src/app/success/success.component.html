@@ -5,11 +5,32 @@
     <mat-card-title *ngIf="message.length">SUCCESS</mat-card-title>
     <mat-card-title *ngIf="!message.length">NOTHING TO UPDATE</mat-card-title>
     <mat-card-content>
-        <ul *ngIf="message.length">
-            <li *ngFor="let item of message">{{ item }}</li>
-        </ul>
         <p *ngIf="!message.length">
             Heads up! No updates were made to any items you selected. This could be due to your filter selections or it could be that the selected items did not need updating. Please adjust your selections and try again.
         </p>
+        <ul *ngIf="message.length">
+            <li *ngFor="let item of message">{{ item }}</li>
+        </ul>
+        <div *ngIf="errorsFound" class="error-info">
+            <p class="error-message"><b>Some items were not able to be updated due to errors:</b></p>
+            <ul>
+                <li *ngFor="let error of updatedItems.audits.errors">
+                    <b>Name:</b> {{ error.item.name }} (Audit ID: {{ error.item.id }})<br>
+                    <b>Error:</b> {{ error.error.error.message }}
+                </li>
+                <li *ngFor="let error of updatedItems.journeys.errors">
+                    <b>Name:</b> {{ error.item.name }} (Journey ID: {{ error.item.id }})<br>
+                    <b>Error:</b> {{ error.error.error.message }}
+                </li>
+                <li *ngFor="let error of updatedItems.apps.errors">
+                    <b>Name:</b> {{ error.item.name }} (App ID: {{ error.item.id }})<br>
+                    <b>Error:</b> {{ error.error.error.message }}
+                </li>
+                <li *ngFor="let error of updatedItems.rules.errors">
+                    <b>Name:</b> {{ error.item.name }} (Rule ID: {{ error.item.id }})<br>
+                    <b>Error:</b> {{ error.error.error.message }}
+                </li>
+            </ul>
+        </div>
     </mat-card-content>
 </mat-card>

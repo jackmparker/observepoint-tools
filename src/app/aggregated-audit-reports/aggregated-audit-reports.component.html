@@ -1,0 +1,79 @@
+<div class="outer-wrap flex">
+        <sidebar current="{{ sidebar }}"></sidebar>
+        <div class="main">
+          <mat-card class="tool-container">
+            <mat-card-title class="tool-title">{{ title }}</mat-card-title>
+            <mat-card-content class="tool-description">{{ description }}</mat-card-content>
+
+            <form [formGroup]="fatkatForm" (ngSubmit)="onSubmit(fatkatForm)">
+                <mat-vertical-stepper linear="true" disableRipple="true">
+                    <mat-step optional="false" [completed]="stepOneCompleted">
+                        <ng-template matStepLabel>Provide an API Key</ng-template>
+                        <profile-selector [form]="fatkatForm"
+                                          (keyEmitter)="markStepOneAsCompleted()">
+                        </profile-selector>
+                        <div class="flex-button">
+                            <button mat-flat-button
+                                    matStepperNext
+                                    type="button"
+                                    color="primary"
+                                    (click)="getAudits()">
+                                Next Step
+                            </button>
+                        </div>
+                    </mat-step>
+                    <mat-step optional="false" [completed]="stepTwoCompleted">
+                        <ng-template matStepLabel>Select Audits</ng-template>
+                        <button mat-stroked-button
+                                matStepperPrevious
+                                type="button"
+                                color="primary">
+                            Previous Step
+                        </button>
+                        <button mat-flat-button
+                                matStepperNext
+                                color="primary">
+                            Next Step
+                        </button>
+                    </mat-step>
+                    <mat-step optional="false">
+                        <ng-template matStepLabel>Additional Configuration Options</ng-template>
+                        <div class="form-group">
+                            <mat-form-field class="full-width">
+                                <input formControlName="fileName" matInput placeholder="File Name">
+                            </mat-form-field>
+                            <small class="instruction">Example: "Audit Report"</small>
+                        </div>
+                        <div class="form-group">
+                            <mat-slide-toggle checked="true"
+                                                color="primary">
+                                Include Variables in Reports
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group">
+                            <mat-slide-toggle color="primary">
+                                Include Separate Files for Each Tag
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field class="full-width">
+                                <textarea formControlName="emails" matInput placeholder="Email Addresses" rows="2"></textarea>
+                            </mat-form-field>
+                            <small class="instruction">One email address per line</small>
+                            <div *ngIf="emails.errors && emails.touched" class="form-error">
+                                <small *ngIf="emails.errors.required">This field is required</small>
+                                <small *ngIf="emails.errors.emailListValidator">Invalid email</small>
+                            </div>
+                        </div>
+                        <button mat-flat-button
+                                type="submit"
+                                color="primary">
+                            Submit
+                        </button>
+                    </mat-step>
+                </mat-vertical-stepper>
+            </form>
+
+          </mat-card>
+        </div>
+      </div>

@@ -80,14 +80,14 @@ export class ApiService {
     return this.http.get(this.url + 'rules', httpOptions);
   }
 
-  getWebJourneyActions(key: string, journeyId) {
+  getWebJourneyActions(key: string, journey) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Authorization': 'api_key ' + key
       })
     };
 
-    return this.http.get(this.url + 'web-journeys/' + journeyId, httpOptions);
+    return this.http.get(this.url + 'web-journeys/' + journey.id, httpOptions);
   }
 
   updateAudit(key: string, audit) {

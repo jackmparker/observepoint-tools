@@ -6,8 +6,8 @@ import { IProfileModel } from '../interfaces/interfaces';
 import { ProfileService } from '../profile-service.service';
 import { ApiService } from '../api.service';
 import { ToolValidators } from '../validators';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, forkJoin, of } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'bulk-email',
@@ -35,17 +35,35 @@ export class BulkEmailComponent implements OnInit {
   emailsToAddRemove: Array<string>;
   destroy$: Subject<boolean> = new Subject<boolean>();
   updatedItems = {
-    audits: 0,
-    journeys: 0,
-    apps: 0,
-    rules: 0
-  }
+    audits: {
+      success: 0,
+      failures: 0,
+      errors: []
+    },
+    journeys: {
+      success: 0,
+      failures: 0,
+      errors: []
+    },
+    apps: {
+      success: 0,
+      failures: 0,
+      errors: []
+    },
+    rules: {
+      success: 0,
+      failures: 0,
+      errors: []
+    }
+  };
   noItemsToFilter: number = 0;
-  numCallsMade: number = 0;
-  numCallsCompleted: number = 0;
+  itemsCompleted: number = 0;
   showSpinner: boolean = false;
+  errorsFound: boolean = false;
   showSuccess: boolean = false;
   successMessage: Array<string> = [];
+  // showSuccess: boolean = true;
+  // successMessage: Array<string> = ['Updated 45 audits', 'Updated 10 journeys', 'Updated 12 rules'];
 
   constructor(
     private titleService: Title,
@@ -156,8 +174,7 @@ export class BulkEmailComponent implements OnInit {
   }
 
   onSubmit(form) {
-    this.successMessage = [];
-    this.showSuccess = false;
+    this.resetVariables();
     this.showSpinner = true;
     let values = form.value;
 
@@ -178,14 +195,14 @@ export class BulkEmailComponent implements OnInit {
         this.audits = this.filterAudits(this.audits);
 
         if(this.audits.length) {
-          this.updateAudits(this.audits);
+          this.updateAudits(this.prepAudits(this.audits));
         } else {
-          this.noItemsToFilter++;
+          this.itemsCompleted++;
           this.checkIfComplete();
         }
       } else {
-        this.noItemsToFilter++;
-          this.checkIfComplete();
+        this.itemsCompleted++;
+        this.checkIfComplete();
       }
     });
   }
@@ -195,16 +212,29 @@ export class BulkEmailComponent implements OnInit {
       this.journeys = journeys;
 
       if(this.journeys.length) {
-        this.journeys = this.filterWebJourneys(this.journeys);
-
-        if(this.journeys.length) {
-          this.updateWebJourneys(this.journeys);
-        } else {
-          this.noItemsToFilter++;
-          this.checkIfComplete();
-        }
+        let journeyObservables = this.journeys.map(journey => {
+          return this.apiService.getWebJourneyActions(this.apiKey, journey);
+        });
+  
+        forkJoin(journeyObservables).subscribe(response => {
+          response.map((journey, index) => {
+            // ensure we don't assign the wrong actions to the wrong journey
+            if(this.journeys[index].id === journey['id']) {
+              this.journeys[index].actions = journey['actions'];
+            }
+          });
+  
+          this.journeys = this.filterWebJourneys(this.journeys);
+  
+          if(this.journeys.length) {
+            this.updateWebJourneys(this.prepJourneys(this.journeys));
+          } else {
+            this.itemsCompleted++;
+            this.checkIfComplete();
+          }
+        });
       } else {
-        this.noItemsToFilter++;
+        this.itemsCompleted++;
         this.checkIfComplete();
       }
     });
@@ -218,13 +248,13 @@ export class BulkEmailComponent implements OnInit {
         this.apps = this.filterApps(this.apps);
 
         if(this.apps.length) {
-          this.updateApps(this.apps);
+          this.updateApps(this.prepApps(this.apps));
         } else {
-          this.noItemsToFilter++;
+          this.itemsCompleted++;
           this.checkIfComplete();
         }
       } else {
-        this.noItemsToFilter++;
+        this.itemsCompleted++;
         this.checkIfComplete();
       }
     });
@@ -241,13 +271,13 @@ export class BulkEmailComponent implements OnInit {
         this.rules = this.filterRules(this.rules);
         
         if(this.rules.length) {
-          this.updateRules(this.rules);
+          this.updateRules(this.prepRules(this.rules));
         } else {
-          this.noItemsToFilter++;
+          this.itemsCompleted++;
           this.checkIfComplete();
         }
       } else {
-        this.noItemsToFilter++;
+        this.itemsCompleted++;
         this.checkIfComplete();
       }
     });
@@ -422,8 +452,8 @@ export class BulkEmailComponent implements OnInit {
     });
   }
 
-  private updateAudits(audits): void {
-    audits.map(audit => {
+  private prepAudits(audits) {
+    return audits.map(audit => {
       if(this.addRemove.value === 'add') {
         let emails = audit.recipients.concat(this.emailsToAddRemove);
         let set = new Set(emails);
@@ -432,18 +462,12 @@ export class BulkEmailComponent implements OnInit {
         audit.recipients = audit.recipients.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
       }
 
-      this.numCallsMade++;
-
-      this.apiService.updateAudit(this.apiKey, audit).subscribe(response => {
-        this.numCallsCompleted++;
-        this.updatedItems.audits++;
-        this.checkIfComplete();
-      });
+      return audit;
     });
   }
 
-  private updateWebJourneys(journeys): void {
-    journeys.map(journey => {
+  private prepJourneys(journeys) {
+    return journeys.map(journey => {
       if(this.addRemove.value === 'add') {
         let emails = journey.emails.concat(this.emailsToAddRemove);
         let set = new Set(emails);
@@ -452,22 +476,12 @@ export class BulkEmailComponent implements OnInit {
         journey.emails = journey.emails.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
       }
 
-      this.numCallsMade++;
-
-      this.apiService.getWebJourneyActions(this.apiKey, journey.id).subscribe(response => {
-        journey.actions = response['actions'];
-
-        this.apiService.updateWebJourney(this.apiKey, journey).subscribe(response => {
-          this.numCallsCompleted++;
-          this.updatedItems.journeys++;
-          this.checkIfComplete();
-        });
-      });
+      return journey;
     });
   }
 
-  private updateApps(apps): void {
-    apps.map(app => {
+  private prepApps(apps) {
+    return apps.map(app => {
       if(this.addRemove.value === 'add') {
         let emails = app.recipients.concat(this.emailsToAddRemove);
         let set = new Set(emails);
@@ -476,18 +490,12 @@ export class BulkEmailComponent implements OnInit {
         app.recipients = app.recipients.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
       }
 
-      this.numCallsMade++;
-
-      this.apiService.updateApp(this.apiKey, app).subscribe(response => {
-        this.numCallsCompleted++;
-        this.updatedItems.apps++;
-        this.checkIfComplete();
-      });
+      return app;
     });
   }
 
-  private updateRules(rules): void {
-    rules.map(rule => {
+  private prepRules(rules) {
+    return rules.map(rule => {
       if(this.addRemove.value === 'add') {
         let emails = rule.recipients.concat(this.emailsToAddRemove);
         let set = new Set(emails);
@@ -496,14 +504,96 @@ export class BulkEmailComponent implements OnInit {
         rule.recipients = rule.recipients.filter(email => this.emailsToAddRemove.indexOf(email) === -1);
       }
 
-      this.numCallsMade++;
-
-      this.apiService.updateRule(this.apiKey, rule).subscribe(response => {
-        this.numCallsCompleted++;
-        this.updatedItems.rules++;
-        this.checkIfComplete();
-      });
+      return rule;
     });
+  }
+
+  private updateAudits(audits): void {
+    let auditObservables = audits.map(audit => {
+      return this.apiService.updateAudit(this.apiKey, audit).pipe(catchError(error => {
+        this.errorsFound = true;
+        this.updatedItems.audits.failures++;
+        this.updatedItems.audits.errors.push({ error: error, item: audit });
+        return of([]);
+      }));
+    });
+
+    forkJoin(auditObservables).subscribe(
+      response => {
+        this.updatedItems.audits.success = response.length - this.updatedItems.audits.failures;
+        this.itemsCompleted++;
+        this.checkIfComplete();
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  private updateWebJourneys(journeys): void {
+    let journeyObservables = journeys.map(journey => {
+      return this.apiService.updateWebJourney(this.apiKey, journey).pipe(catchError(error => {
+        this.errorsFound = true;
+        this.updatedItems.journeys.failures++;
+        this.updatedItems.journeys.errors.push({ error: error, item: journey });
+        return of([]);
+      }));
+    });
+
+    forkJoin(journeyObservables).subscribe(
+      response => {
+        this.updatedItems.journeys.success = response.length - this.updatedItems.journeys.failures;
+        this.itemsCompleted++;
+        this.checkIfComplete();
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  private updateApps(apps): void {
+    let appObservables = apps.map(app => {
+      return this.apiService.updateApp(this.apiKey, app).pipe(catchError(error => {
+        this.errorsFound = true;
+        this.updatedItems.apps.failures++;
+        this.updatedItems.apps.errors.push({ error: error, item: app });
+        return of([]);
+      }));
+    });
+
+    forkJoin(appObservables).subscribe(
+      response => {
+        this.updatedItems.apps.success = response.length - this.updatedItems.apps.failures;
+        this.itemsCompleted++;
+        this.checkIfComplete();
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  private updateRules(rules): void {
+    let ruleObservables = rules.map(rule => {
+      return this.apiService.updateRule(this.apiKey, rule).pipe(catchError(error => {
+        this.errorsFound = true;
+        this.updatedItems.rules.failures++;
+        this.updatedItems.rules.errors.push({ error: error, item: rule });
+        return of([]);
+      }));
+    });
+    
+    forkJoin(ruleObservables).subscribe(
+      response => {
+        this.updatedItems.rules.success = response.length - this.updatedItems.rules.failures;
+        this.itemsCompleted++;
+        this.checkIfComplete();
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   private setFilterOptions(): void {
@@ -524,23 +614,11 @@ export class BulkEmailComponent implements OnInit {
   }
 
   private checkIfComplete(): void {
-    if(this.noItemsToFilter) {
-      let applyToCount = this.getApplyToCount();
-      if(this.noItemsToFilter === applyToCount) {
-        
-        console.log('no items to update');
+    let applyToCount = this.getApplyToCount();
 
-        this.showSpinner = false;
-        this.displayResults();
-      }
-    } else {
-      if(this.numCallsMade === this.numCallsCompleted) {
-        
-        console.log('some items were updated');
-
-        this.showSpinner = false;
-        this.displayResults();
-      }
+    if(this.itemsCompleted === applyToCount) {
+      this.showSpinner = false;
+      this.displayResults();
     }
   }
 
@@ -567,41 +645,57 @@ export class BulkEmailComponent implements OnInit {
     setTimeout(() => {
       this.showSuccess = true;
     }, 500);
-
-    this.resetVariables();
   }
 
   private generateSuccessMessage() {
-    let numAudits = this.updatedItems.audits;
+    let numAudits = this.updatedItems.audits.success;
     if(numAudits) {
       this.successMessage.push('Updated ' + numAudits + ' web audits');
     }
 
-    let numJourneys = this.updatedItems.journeys;
+    let numJourneys = this.updatedItems.journeys.success;
     if(numJourneys) {
       this.successMessage.push('Updated ' + numJourneys + ' web journeys');
     }
 
-    let numApps = this.updatedItems.apps;
+    let numApps = this.updatedItems.apps.success;
     if(numApps) {
       this.successMessage.push('Updated ' + numApps + ' apps');
     }
 
-    let numRules = this.updatedItems.rules;
+    let numRules = this.updatedItems.rules.success;
     if(numRules) {
       this.successMessage.push('Updated ' + numRules + ' rules');
     }
   }
 
   private resetVariables() {
+    this.successMessage = [];
     this.noItemsToFilter = 0;
-    this.numCallsMade = 0;
-    this.numCallsCompleted = 0;
+    this.itemsCompleted = 0;
+    this.errorsFound = false;
+    this.showSuccess = false;
     this.updatedItems = {
-      audits: 0,
-      journeys: 0,
-      apps: 0,
-      rules: 0
+      audits: {
+        success: 0,
+        failures: 0,
+        errors: []
+      },
+      journeys: {
+        success: 0,
+        failures: 0,
+        errors: []
+      },
+      apps: {
+        success: 0,
+        failures: 0,
+        errors: []
+      },
+      rules: {
+        success: 0,
+        failures: 0,
+        errors: []
+      }
     }
   }
 

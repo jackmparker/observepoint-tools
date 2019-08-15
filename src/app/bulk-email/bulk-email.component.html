@@ -5,7 +5,9 @@
       <mat-card-title class="tool-title">{{ title }}</mat-card-title>
       <mat-card-content class="tool-description">{{ description }}</mat-card-content>
       <success [message]="successMessage"
-               [show]="showSuccess">
+               [show]="showSuccess"
+               [errorsFound]="errorsFound"
+               [updatedItems]="updatedItems">
       </success>
       <form [formGroup]="bulkEmailForm" (ngSubmit)="onSubmit(bulkEmailForm)">
         <div class="form-group radio-buttons">

@@ -3,6 +3,12 @@ import { TOOL_NAMES } from '../constants/constants';
 
 export const tools: IToolsModel[] = [
     {
+      name: TOOL_NAMES.AGGREGATED_AUDIT_REPORTS.DISPLAY_NAME,
+      path: TOOL_NAMES.AGGREGATED_AUDIT_REPORTS.PATH,
+      description: TOOL_NAMES.AGGREGATED_AUDIT_REPORTS.DESCRIPTION,
+      title: TOOL_NAMES.AGGREGATED_AUDIT_REPORTS.TITLE
+    },
+    {
       name: TOOL_NAMES.BULK_EMAIL.DISPLAY_NAME,
       path: TOOL_NAMES.BULK_EMAIL.PATH,
       description: TOOL_NAMES.BULK_EMAIL.DESCRIPTION,
@@ -15,16 +21,16 @@ export const tools: IToolsModel[] = [
       title: TOOL_NAMES.TAG_LIST.TITLE
     },
     {
-      name: TOOL_NAMES.BEARER_TOKEN.DISPLAY_NAME,
-      path: TOOL_NAMES.BEARER_TOKEN.PATH,
-      description: TOOL_NAMES.BEARER_TOKEN.DESCRIPTION,
-      title: TOOL_NAMES.BEARER_TOKEN.TITLE
-    },
-    {
       name: TOOL_NAMES.FOLDER_DOMAIN_IDS.DISPLAY_NAME,
       path: TOOL_NAMES.FOLDER_DOMAIN_IDS.PATH,
       description: TOOL_NAMES.FOLDER_DOMAIN_IDS.DESCRIPTION,
       title: TOOL_NAMES.FOLDER_DOMAIN_IDS.TITLE
+    },
+    {
+      name: TOOL_NAMES.BEARER_TOKEN.DISPLAY_NAME,
+      path: TOOL_NAMES.BEARER_TOKEN.PATH,
+      description: TOOL_NAMES.BEARER_TOKEN.DESCRIPTION,
+      title: TOOL_NAMES.BEARER_TOKEN.TITLE
     }
     // {
     //   name: TOOL_NAMES.BULK_ITEM_DELETER.DISPLAY_NAME,

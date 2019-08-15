@@ -6,7 +6,7 @@ import { IFolderDomainIdModel } from '../interfaces/interfaces';
 import { ApiService } from '../api.service';
 import { MatSort } from '@angular/material/sort';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { zip } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-folder-domain-ids',
@@ -58,7 +58,7 @@ export class FolderDomainIdsComponent implements OnInit {
     let folders = this.apiService.getFolderIds(this.apiKey);
     let domains = this.apiService.getDomainIds(this.apiKey);
 
-    zip(folders, domains).subscribe(([folderIds, domainIds]) => {
+    forkJoin(folders, domains).subscribe(([folderIds, domainIds]) => {
       // folders
       this.folderIds = folderIds;
       this.folderIds = this.folderIds

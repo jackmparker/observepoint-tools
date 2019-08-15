@@ -1,0 +1,26 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+
+    .flex-button {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+}
+
+::ng-deep {
+
+    .mat-step-header.cdk-keyboard-focused,
+    .mat-step-header.cdk-program-focused,
+    .mat-step-header:hover {
+        background-color: #fff !important;
+    }
+    
+    .mat-vertical-stepper-header {
+        padding-left: 0 !important;
+    }
+
+    .mat-vertical-content-container {
+        margin-left: 11px !important;
+    }
+}

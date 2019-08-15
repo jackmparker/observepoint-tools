@@ -26,4 +26,14 @@
 		cursor: pointer;
 		width: auto;
 	}
+
+	.error-info {
+		color: #D91C0B;
+		
+		.error-message {
+			margin-top: 25px;
+			border-top: 1px solid #ddd;
+			padding-top: 25px;
+		}
+	}
 }

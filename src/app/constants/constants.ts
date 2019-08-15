@@ -46,6 +46,12 @@ export const TOOL_NAMES = {
         PATH: '/folder-domain-ids',
         TITLE: 'Retrieve Folder & Domain IDs',
         DESCRIPTION: 'Retrieve all folder and domain IDs in an account.'
+    },
+    AGGREGATED_AUDIT_REPORTS : {
+        DISPLAY_NAME: 'AGGREGATED AUDIT REPORTS',
+        PATH: '/audit-reports',
+        TITLE: 'Aggregated Audit Reports',
+        DESCRIPTION: 'Known as "FatKat" to the ObservePoint consultants, this tool will aggregate the data from multiple audits into a single report. Options include specifying specific tags and variables.'
     }
 }
 

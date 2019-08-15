@@ -9,6 +9,8 @@ export class SuccessComponent {
 
   @Input() message: any;
   @Input() show: boolean;
+  @Input() errorsFound: boolean;
+  @Input() updatedItems: any;
 
   onCloseClick() {
     this.show = false;
