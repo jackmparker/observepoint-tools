@@ -24,12 +24,13 @@
         }
 
         .delete {
+            background-color: $warn;
             margin-right: 15px;
             color: #fff;
-        }
 
-        [ng-reflect-disabled="false"] {
-            background-color: $warn;
+            &[disabled="true"] {
+                background-color: #cbcbcb;
+            }
         }
 
         mat-icon {
