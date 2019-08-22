@@ -66,3 +66,26 @@ export interface IFolderDomainIdModel {
     name: string;
     id: number;
 }
+
+export interface IAuditModel {
+    id: number;
+    name: string;
+    folderId: number;
+    domainId: number;
+    labels: any;
+}
+
+export interface IAuditRunModel {
+    completed: string;
+    id: number;
+}
+
+export interface IAuditObjectModel {
+    id: number;
+    runId: number;
+}
+
+export interface ITagListModel {
+    id: number;
+    name: string;
+}

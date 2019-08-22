@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { IAuditObjectModel } from './interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -131,7 +132,17 @@ export class ApiService {
   }
 
   getTags() {
-    return this.http.get('https://desolate-bastion-45562.herokuapp.com/');
+    return this.http.get('https://guarded-journey-73055.herokuapp.com/tag-list/');
+  }
+
+  getAccountTags(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'tags', httpOptions);
   }
 
   login(creds) {
@@ -156,6 +167,30 @@ export class ApiService {
     };
 
     return this.http.get(this.url + 'domains', httpOptions);
+  }
+
+  getAuditRuns(key: string, auditId: number) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'web-audits/' + auditId + '/runs', httpOptions);
+  }
+
+  getAuditRunSummaries(key: string, audit: IAuditObjectModel) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'web-audits/' + audit.id + '/runs/' + audit.runId + '/results/variable/summary', httpOptions);
+  }
+
+  sendFatKatRequest(payload) {
+    return this.http.post('https://guarded-journey-73055.herokuapp.com/fatkat/', JSON.stringify(payload));
   }
 
 }

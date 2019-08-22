@@ -10,39 +10,123 @@
                     <mat-step optional="false" [completed]="stepOneCompleted">
                         <ng-template matStepLabel>Provide an API Key</ng-template>
                         <profile-selector [form]="fatkatForm"
-                                          (keyEmitter)="markStepOneAsCompleted()">
+                                          (keyEmitter)="onProfileSelection($event)">
                         </profile-selector>
                         <div class="flex-button">
                             <button mat-flat-button
                                     matStepperNext
                                     type="button"
                                     color="primary"
-                                    (click)="getAudits()">
+                                    [disabled]="!stepOneCompleted">
                                 Next Step
                             </button>
                         </div>
                     </mat-step>
                     <mat-step optional="false" [completed]="stepTwoCompleted">
                         <ng-template matStepLabel>Select Audits</ng-template>
-                        <button mat-stroked-button
-                                matStepperPrevious
-                                type="button"
-                                color="primary">
-                            Previous Step
-                        </button>
-                        <button mat-flat-button
-                                matStepperNext
-                                color="primary">
-                            Next Step
-                        </button>
+                        <mat-spinner *ngIf="!audits"
+                                     [diameter]="25"
+                                     [strokeWidth]="4"
+                                     class="spinner">
+                        </mat-spinner>
+                        <div *ngIf="audits"
+                             class="audit-box-wrap">
+                            <div class="search">
+                                <mat-icon class="search-icon">search</mat-icon>
+                                <mat-form-field>
+                                    <input matInput placeholder="Search Audits" formControlName="auditSearchText" autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <mat-checkbox *ngFor="let audit of audits | filter: auditSearchText"
+                                          color="primary"
+                                          value="{{ audit.id }}"
+                                          name="{{ audit.name }}"
+                                          (change)="updateSelectedAudits($event, audit)">
+                                {{ audit.name }}
+                            </mat-checkbox>
+                        </div>
+                        <div class="flex-button">
+                            <button mat-flat-button
+                                    matStepperNext
+                                    color="primary"
+                                    class="right-button"
+                                    type="button"
+                                    [disabled]="!stepTwoCompleted"
+                                    (click)="getLatestRuns()">
+                                Next Step
+                            </button>
+                            <button mat-stroked-button
+                                    matStepperPrevious
+                                    type="button"
+                                    color="primary">
+                                Previous Step
+                            </button>
+                        </div>
                     </mat-step>
                     <mat-step optional="false">
                         <ng-template matStepLabel>Additional Configuration Options</ng-template>
+                        <mat-radio-group formControlName="tagPicker" class="tag-picker">
+                            <mat-radio-button color="primary" value="all">I want to include all tags</mat-radio-button>
+                            <mat-radio-button color="primary" value="select">I only want to include certain tags</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-spinner *ngIf="!tagList && tagPicker.value === 'select'"
+                                     [diameter]="25"
+                                     [strokeWidth]="4"
+                                     class="spinner">
+                        </mat-spinner>
+                        <div class="step3" *ngIf="tagList">
+                            <div *ngIf="tagPicker.value == 'select'" class="select-tags">
+                                <div class="audit-box-wrap">
+                                    <div class="search">
+                                        <mat-icon class="search-icon">search</mat-icon>
+                                        <mat-form-field>
+                                            <input matInput placeholder="Search Tags" formControlName="tagSearchText" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                    <mat-checkbox *ngFor="let tag of tagList | filter: tagSearchText"
+                                                    color="primary"
+                                                    value="{{ tag.id }}"
+                                                    name="{{ tag.name }}"
+                                                    (change)="onTagSelected($event, tag)">
+                                        <div class="label-flex">
+                                            <img src="{{ tag.tagData.icon }}"> {{ tag.name }}
+                                        </div>
+                                    </mat-checkbox>
+                                </div>
+        
+                                <div *ngIf="tagsSelected.length" class="variables-accordion">
+                                    <p class="variables-heading">Optionally select individual variables for each tag:</p>
+                                    <mat-accordion displayMode="flat">
+                                        <mat-expansion-panel *ngFor="let tag of tagsSelected">
+                                            <mat-expansion-panel-header>
+                                                <img src="{{ tag.tagData.icon }}"> {{ tag.name }} Variables
+                                            </mat-expansion-panel-header>
+                                            <mat-checkbox *ngFor="let variable of tag.variables"
+                                                        color="primary"
+                                                        value="{{ variable.name }}"
+                                                        name="{{ variable.name }}"
+                                                        (change)="onVariableSelected($event, variable)">
+                                                <ng-container *ngIf="variable.friendlyName">
+                                                    {{ variable.friendlyName }} ({{ variable.name }})
+                                                </ng-container>
+                                                <ng-container *ngIf="!variable.friendlyName">
+                                                    {{ variable.name }}
+                                                </ng-container>
+                                            </mat-checkbox>
+                                            <p *ngIf="!tag.variables.length">No variables available</p>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <mat-form-field class="full-width">
-                                <input formControlName="fileName" matInput placeholder="File Name">
+                                <input formControlName="fileName" matInput placeholder="File Name Prefix">
                             </mat-form-field>
                             <small class="instruction">Example: "Audit Report"</small>
+                            <div *ngIf="fileName.errors && fileName.touched" class="form-error">
+                                <small *ngIf="fileName.errors.required">This field is required</small>
+                            </div>
                         </div>
                         <div class="form-group">
                             <mat-slide-toggle checked="true"
@@ -65,11 +149,26 @@
                                 <small *ngIf="emails.errors.emailListValidator">Invalid email</small>
                             </div>
                         </div>
-                        <button mat-flat-button
-                                type="submit"
-                                color="primary">
-                            Submit
-                        </button>
+                        <div class="flex-button">
+                            <button mat-flat-button
+                                    type="submit"
+                                    color="primary"
+                                    class="right-button"
+                                    [disabled]="this.fatkatForm.status === 'INVALID'">
+                                Submit
+                            </button>
+                            <button mat-stroked-button
+                                    matStepperPrevious
+                                    type="button"
+                                    color="primary">
+                                Previous Step
+                            </button>
+                            <mat-spinner *ngIf="showSpinner"
+                                         [diameter]="25"
+                                         [strokeWidth]="4"
+                                         class="waiting-for-response">
+                            </mat-spinner>
+                        </div>
                     </mat-step>
                 </mat-vertical-stepper>
             </form>
