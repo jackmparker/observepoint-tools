@@ -5,6 +5,14 @@
             <mat-card-title class="tool-title">{{ title }}</mat-card-title>
             <mat-card-content class="tool-description">{{ description }}</mat-card-content>
 
+            <success [show]="showSuccess"
+                     class="success-message">
+                <mat-card-title>SUCCESS</mat-card-title>
+                <p *ngIf="payload">
+                    The following email addresses will receive a link to download the report: {{ payload.email }}
+                </p>
+            </success>
+
             <form [formGroup]="fatkatForm" (ngSubmit)="onSubmit(fatkatForm)">
                 <mat-vertical-stepper linear="true" disableRipple="true">
                     <mat-step optional="false" [completed]="stepOneCompleted">
@@ -120,7 +128,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <mat-form-field class="full-width">
+                            <mat-form-field class="full-width filename">
                                 <input formControlName="fileName" matInput placeholder="File Name Prefix">
                             </mat-form-field>
                             <small class="instruction">Example: "Audit Report"</small>

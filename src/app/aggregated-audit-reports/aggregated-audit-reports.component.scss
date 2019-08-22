@@ -101,6 +101,25 @@
             }
         }
     }
+
+    .filename {
+        margin-top: 30px;
+    }
+
+    .success-message {
+        
+        mat-card-title {
+            color: $text !important;
+            font-size: 20px;
+            padding: 0 0 0 10px;
+            margin: 0 0 15px 12px;
+        }
+        
+        p {
+            max-width: 550px;
+            margin-left: 23px;
+        }
+    }
 }
 
 ::ng-deep {

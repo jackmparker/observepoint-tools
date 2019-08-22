@@ -4,10 +4,37 @@
     <mat-card class="tool-container">
       <mat-card-title class="tool-title">{{ title }}</mat-card-title>
       <mat-card-content class="tool-description">{{ description }}</mat-card-content>
-      <success [message]="successMessage"
-               [show]="showSuccess"
-               [errorsFound]="errorsFound"
-               [updatedItems]="updatedItems">
+      <success [show]="showSuccess"
+               class="successMessage">
+          <mat-card-title *ngIf="successMessage.length">SUCCESS</mat-card-title>
+          <mat-card-title *ngIf="!successMessage.length">NOTHING TO UPDATE</mat-card-title>
+          <p *ngIf="!successMessage.length">
+              Heads up! No updates were made to any items you selected. This could be due to your filter selections or it could be that the selected items did not need updating. Please adjust your selections and try again.
+          </p>
+          <ul *ngIf="successMessage.length">
+              <li *ngFor="let item of successMessage">{{ item }}</li>
+          </ul>
+          <div *ngIf="errorsFound" class="error-info">
+              <p class="error-message"><b>Some items were not able to be updated due to errors:</b></p>
+              <ul>
+                  <li *ngFor="let error of updatedItems.audits.errors">
+                      <b>Name:</b> {{ error.item.name }} (Audit ID: {{ error.item.id }})<br>
+                      <b>Error:</b> {{ error.error.error.message }}
+                  </li>
+                  <li *ngFor="let error of updatedItems.journeys.errors">
+                      <b>Name:</b> {{ error.item.name }} (Journey ID: {{ error.item.id }})<br>
+                      <b>Error:</b> {{ error.error.error.message }}
+                  </li>
+                  <li *ngFor="let error of updatedItems.apps.errors">
+                      <b>Name:</b> {{ error.item.name }} (App ID: {{ error.item.id }})<br>
+                      <b>Error:</b> {{ error.error.error.message }}
+                  </li>
+                  <li *ngFor="let error of updatedItems.rules.errors">
+                      <b>Name:</b> {{ error.item.name }} (Rule ID: {{ error.item.id }})<br>
+                      <b>Error:</b> {{ error.error.error.message }}
+                  </li>
+              </ul>
+          </div>
       </success>
       <form [formGroup]="bulkEmailForm" (ngSubmit)="onSubmit(bulkEmailForm)">
         <div class="form-group radio-buttons">

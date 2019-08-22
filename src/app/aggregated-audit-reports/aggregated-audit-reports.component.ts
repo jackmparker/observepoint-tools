@@ -37,6 +37,8 @@ export class AggregatedAuditReportsComponent implements OnInit {
   tagsSelectedIds: any = [];
   variablesSelected: any = [];
   showSpinner: boolean = false;
+  payload: any;
+  showSuccess: boolean = false;
 
   constructor(private titleService: Title,
               private fb: FormBuilder,
@@ -261,14 +263,26 @@ export class AggregatedAuditReportsComponent implements OnInit {
     };
   }
 
-  onSubmit(fatkatForm: FormGroup) {
+  onSubmit() {
+    this.showSuccess = false;
     this.showSpinner = true;
-    let payload = this.createPayload();
+    this.payload = this.createPayload();
     
-    // this.apiService.sendFatKatRequest(payload).subscribe(response => {
-    //   this.showSpinner = false;
-    //   console.log('php response: ', response);
-    // });
+    this.apiService.sendFatKatRequest(this.payload).subscribe(response => {
+      this.showSpinner = false;
+      
+      window.scroll({
+        top: 0, 
+        left: 0, 
+        behavior: 'smooth'
+      });
+  
+      setTimeout(() => {
+        this.showSuccess = true;
+      }, 500);
+
+      console.log('fatkat api response: ', response);
+    });
   }
 
   get name() {
