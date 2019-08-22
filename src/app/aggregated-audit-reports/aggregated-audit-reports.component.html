@@ -13,7 +13,7 @@
                 </p>
             </success>
 
-            <form [formGroup]="fatkatForm" (ngSubmit)="onSubmit(fatkatForm)">
+            <form [formGroup]="fatkatForm" (ngSubmit)="onSubmit()">
                 <mat-vertical-stepper linear="true" disableRipple="true">
                     <mat-step optional="false" [completed]="stepOneCompleted">
                         <ng-template matStepLabel>Provide an API Key</ng-template>
