@@ -18,7 +18,7 @@ export class ProfileEditorComponent implements OnInit {
   profiles: IProfileModel[];
   dataSource = new MatTableDataSource<IProfileModel>();
   selection = new SelectionModel<IProfileModel>(true, []);
-  displayedColumns: string[] = ['select', 'name', 'key', 'edit'];
+  displayedColumns: string[] = ['select', 'name', 'key', 'edit', 'delete'];
   name: string;
   key: string;
   destroy$: Subject<boolean> = new Subject<boolean>();
@@ -104,6 +104,13 @@ export class ProfileEditorComponent implements OnInit {
         this.profileService.updateProfiles(diff);
       }
     });
+  }
+
+  onDelete(profile: IProfileModel) {
+    let diff = this.profiles.filter(x => x.key !== profile.key);
+    this.profiles = diff;
+    this.dataSource.data = diff;
+    this.profileService.updateProfiles(diff);
   }
 
   private sortProfiles(profiles: IProfileModel[]) {

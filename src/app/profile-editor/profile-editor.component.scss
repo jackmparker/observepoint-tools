@@ -48,8 +48,10 @@
             max-width: 350px;
         }
 
-        td.cdk-column-edit {
+        td.cdk-column-edit,
+        td.cdk-column-delete {
             text-align: right;
+            width: 50px;
 
             mat-icon {
                 cursor: pointer;
@@ -57,6 +59,10 @@
                 font-size: 19px;
                 position: relative;
                 top: 3px;
+
+                &:hover {
+                    color: $yellow;
+                }
             }
         }
     }
