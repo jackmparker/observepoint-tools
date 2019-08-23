@@ -9,7 +9,7 @@ export const TOOL_NAMES = {
         DISPLAY_NAME: 'BULK ITEM DELETER',
         PATH: '/bulk-delete',
         TITLE: 'Bulk Item Deleter',
-        DESCRIPTION: 'Quickly select the audits, journeys, and rules you wish to remove from an account and delete them with just one click.'
+        DESCRIPTION: 'Quickly select the items you wish to remove from an account and delete them with just one click.'
     },
     BULK_LABEL_DELETER: {
         DISPLAY_NAME: 'BULK LABEL DELETER',

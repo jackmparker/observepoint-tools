@@ -1,0 +1,9 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+    
+    .button-wrap {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

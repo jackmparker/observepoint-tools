@@ -38,6 +38,7 @@ import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.
 import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
+import { BulkDeleteComponent } from './bulk-delete/bulk-delete.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     TagListComponent,
     BearerTokenGeneratorComponent,
     FolderDomainIdsComponent,
-    AggregatedAuditReportsComponent
+    AggregatedAuditReportsComponent,
+    BulkDeleteComponent
   ],
   imports: [
     FormsModule,

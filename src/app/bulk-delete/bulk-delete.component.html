@@ -1,0 +1,27 @@
+<div class="outer-wrap flex">
+    <sidebar current="{{ sidebar }}"></sidebar>
+    <div class="main">
+      <mat-card class="tool-container">
+        <mat-card-title class="tool-title">{{ title }}</mat-card-title>
+        <mat-card-content class="tool-description">{{ description }}</mat-card-content>
+
+        <div class="form-wrap">
+            <profile-selector [form]="bulkDeleteForm">
+            </profile-selector>
+            <div class="button-wrap">
+                <button (click)="getItems()"
+                        mat-flat-button
+                        color="primary"
+                        [disabled]="bulkDeleteForm.status === 'INVALID'">
+                    Get Items
+                </button>
+                <mat-spinner *ngIf="showSpinner"
+                             [diameter]="25"
+                             [strokeWidth]="4">
+                </mat-spinner>
+            </div>
+        </div>
+
+      </mat-card>
+    </div>
+  </div>

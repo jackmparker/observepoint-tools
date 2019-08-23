@@ -15,6 +15,12 @@ export const tools: IToolsModel[] = [
       title: TOOL_NAMES.BULK_EMAIL.TITLE
     },
     {
+      name: TOOL_NAMES.BULK_ITEM_DELETER.DISPLAY_NAME,
+      path: TOOL_NAMES.BULK_ITEM_DELETER.PATH,
+      description: TOOL_NAMES.BULK_ITEM_DELETER.DESCRIPTION,
+      title: TOOL_NAMES.BULK_ITEM_DELETER.TITLE
+    },
+    {
       name: TOOL_NAMES.TAG_LIST.DISPLAY_NAME,
       path: TOOL_NAMES.TAG_LIST.PATH,
       description: TOOL_NAMES.TAG_LIST.DESCRIPTION,
@@ -32,12 +38,6 @@ export const tools: IToolsModel[] = [
       description: TOOL_NAMES.BEARER_TOKEN.DESCRIPTION,
       title: TOOL_NAMES.BEARER_TOKEN.TITLE
     }
-    // {
-    //   name: TOOL_NAMES.BULK_ITEM_DELETER.DISPLAY_NAME,
-    //   path: TOOL_NAMES.BULK_ITEM_DELETER.PATH,
-    //   description: TOOL_NAMES.BULK_ITEM_DELETER.DESCRIPTION,
-    //   title: TOOL_NAMES.BULK_ITEM_DELETER.TITLE
-    // },
     // {
     //   name: TOOL_NAMES.BULK_LABEL_DELETER.DISPLAY_NAME,
     //   path: TOOL_NAMES.BULK_LABEL_DELETER.PATH,
