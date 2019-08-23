@@ -42,6 +42,7 @@ import { OpCustomTagBuilderComponent } from './op-custom-tag-builder/op-custom-t
 import { MarkdownModule } from 'ngx-markdown';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RunEntireFolderComponent } from './run-entire-folder/run-entire-folder.component';
+import { BulkDeleteComponent } from './bulk-delete/bulk-delete.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { RunEntireFolderComponent } from './run-entire-folder/run-entire-folder.
     FolderDomainIdsComponent,
     AggregatedAuditReportsComponent,
     OpCustomTagBuilderComponent,
-    RunEntireFolderComponent
+    RunEntireFolderComponent,
+    BulkDeleteComponent
   ],
   imports: [
     FormsModule,

@@ -9,6 +9,7 @@ import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.
 import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
 import { OpCustomTagBuilderComponent } from './op-custom-tag-builder/op-custom-tag-builder.component';
 import { RunEntireFolderComponent } from './run-entire-folder/run-entire-folder.component';
+import { BulkDeleteComponent } from './bulk-delete/bulk-delete.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: 'folder-domain-ids', component: FolderDomainIdsComponent },
   { path: 'audit-reports', component: AggregatedAuditReportsComponent },
   { path: 'op-custom-tag-builder', component: OpCustomTagBuilderComponent },
-  { path: 'run-entire-folder', component: RunEntireFolderComponent }
+  { path: 'run-entire-folder', component: RunEntireFolderComponent },
+  { path: 'bulk-delete', component: BulkDeleteComponent }
 ];
 
 @NgModule({
