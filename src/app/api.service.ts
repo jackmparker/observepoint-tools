@@ -132,7 +132,7 @@ export class ApiService {
   }
 
   getTags() {
-    return this.http.get('https://guarded-journey-73055.herokuapp.com/tag-list/');
+    return this.http.get('https://jackparker.me/observepoint-tools/tag-list/');
   }
 
   getAccountTags(key: string) {
@@ -190,7 +190,7 @@ export class ApiService {
   }
 
   sendFatKatRequest(payload) {
-    return this.http.post('https://guarded-journey-73055.herokuapp.com/fatkat/', JSON.stringify(payload));
+    return this.http.post('https://jackparker.me/observepoint-tools/fatkat/', JSON.stringify(payload));
   }
 
 }
