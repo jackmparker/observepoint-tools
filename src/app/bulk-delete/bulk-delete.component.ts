@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { TOOL_NAMES } from '../constants/constants';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IProfileModel } from '../interfaces/interfaces';
+import { IProfileModel, IFolderModel } from '../interfaces/interfaces';
 import { ProfileService } from '../profile-service.service';
+import { ApiService } from '../api.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'bulk-delete',
@@ -17,11 +20,14 @@ export class BulkDeleteComponent implements OnInit {
   description: string = TOOL_NAMES.BULK_ITEM_DELETER.DESCRIPTION;
   bulkDeleteForm: FormGroup;
   profiles: IProfileModel[];
+  formSubmitted: boolean = false;
   showSpinner: boolean = false;
+  apiKey: string;
 
   constructor(private titleService: Title,
               private fb: FormBuilder,
-              private profileService: ProfileService) { }
+              private profileService: ProfileService,
+              private apiService: ApiService) { }
 
   ngOnInit() {
     this.setTitle(TOOL_NAMES.BULK_EMAIL.TITLE);
@@ -48,9 +54,58 @@ export class BulkDeleteComponent implements OnInit {
     this.titleService.setTitle(title + ' | ObservePoint Tools');
   }
 
-  getItems() {
-    console.log(this.bulkDeleteForm.value);
+  private getApiKey(): void {
+    let form = this.bulkDeleteForm.value;
+    this.apiKey = form.profile ? form.profile : form.key;
   }
+
+  getItems() {
+    this.showSpinner = false;
+    this.getApiKey();
+    this.getFolders();
+  }
+  
+
+  /*
+   *  FOLDERS
+   *
+  */
+ 
+  folders: IFolderModel[];
+  displayedColumns: string[] = ['select', 'name', 'domains', 'apps', 'createdBy'];
+  dataSource = new MatTableDataSource<IFolderModel>();
+  selection = new SelectionModel<IFolderModel>(true, []);
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  private getFolders() {
+    this.apiService.getFolders(this.apiKey).subscribe((folders: IFolderModel[]): void => {
+      this.folders = folders;
+      this.showSpinner = false;
+      this.formSubmitted = true;
+      this.displayFolders();  
+    });
+  }
+  
+  private displayFolders() {
+    this.dataSource.data = this.folders;
+  }
+
+
+  /*
+   *  FORM GETTERS
+   *
+  */
 
   get name() {
     return this.bulkDeleteForm.get('name');
@@ -63,5 +118,4 @@ export class BulkDeleteComponent implements OnInit {
   get profile() {
     return this.bulkDeleteForm.get('profile');
   }
-
 }

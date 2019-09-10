@@ -62,6 +62,24 @@ export interface IErrorHeadersModel {
     normalizedNames?: any;
 }
 
+export interface IFolderModel {
+    appsRunning: number;
+    appsInQueue: number;
+    name: string;
+    appRuleFailures: number;
+    createdByUserName: string;
+    appsCount: number;
+    accountId: number;
+    createdByUserId: number;
+    id: number;
+    auditsRunning: number;
+    createdAt: string;
+    appFailures: number;
+    simulationErrors: number;
+    simulationsRunning: number;
+    domainsCount: number;
+}
+
 export interface IFolderDomainIdModel {
     name: string;
     id: number;
