@@ -52,6 +52,12 @@ export const TOOL_NAMES = {
         PATH: '/audit-reports',
         TITLE: 'Aggregated Audit Reports',
         DESCRIPTION: 'Known as "FatKat" to the ObservePoint consultants, this tool will aggregate the data from multiple audits into a single report. Options include specifying specific tags and variables.'
+    },
+    OP_CUSTOM_TAG_BUILDER : {
+        DISPLAY_NAME: 'OBSERVEPOINT CUSTOM TAG BUILDER',
+        PATH: '/op-custom-tag-builder',
+        TITLE: 'Custom Tag Builder',
+        DESCRIPTION: 'Leverage the power of the ObservePoint Custom Tag to collect additional data in your audits and journeys.'
     }
 }
 
