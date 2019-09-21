@@ -1,0 +1,62 @@
+<div class="outer-wrap flex">
+    <sidebar current="{{ sidebar }}"></sidebar>
+    <div class="main">
+      <mat-card class="tool-container">
+        <mat-card-title class="tool-title">{{ title }}</mat-card-title>
+        <mat-card-content class="tool-description">{{ description }}</mat-card-content>
+
+        <p><strong>INSTRUCTIONS:</strong></p>
+        <p>
+          Each section has a checkbox that, when checked, will add the functionality
+          of this code to your master code block at the bottom of this page. Once you have finished your selection,
+          simply click the copy button to copy the code to your clipboard. Then, paste this in your audit actions or
+          journey steps.
+        </p>
+        <br>
+
+        <div class="tag-container" *ngFor="let item of data; let index = index">
+          <div class="tag-container-heading">
+            <mat-checkbox color="primary" (change)="onCheckboxChange($event.checked, index, item.compressed)">{{ item.title }}</mat-checkbox>
+          </div>
+          <mat-tab-group>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon>assignment</mat-icon>
+              </ng-template>
+              <div class="tag-container-description" [innerHTML]="item.description"></div>
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon>code</mat-icon>
+              </ng-template>
+              <markdown ngPreserveWhitespaces>
+                {{ item.code }}
+              </markdown>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+
+        <div class="results">
+          <p><strong>RESULTS:</strong></p>
+          <!-- <div class="none-selected" *ngIf="!compressed">
+            <p>Please make a selection</p>
+          </div> -->
+          <div class="compressed">
+            <p *ngIf="!compressed">Please select at least one item above</p>
+            {{ compressed }}
+          </div>
+          <div class="button-wrap">
+            <button mat-flat-button
+                    color="primary"
+                    ngxClipboard
+                    cbContent="{{ compressed }}"
+                    (click)="showCopyMessage()">
+                <mat-icon class="copy-icon">attach_file</mat-icon>
+                Copy to Clipboard
+            </button>
+          </div>
+        </div>
+
+      </mat-card>
+    </div>
+  </div>

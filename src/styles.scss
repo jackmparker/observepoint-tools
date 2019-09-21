@@ -37,14 +37,15 @@ body {
 
 .flex {
 	display: flex;
+	justify-content: space-between
 }
 
 sidebar {
-	flex-basis: 225px;
+	width: 225px;
 }
 
 .main {
-	flex: 1;
+	width: 845px;
 }
 
 mat-dialog-container {

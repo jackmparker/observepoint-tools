@@ -38,6 +38,9 @@ import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.
 import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
+import { OpCustomTagBuilderComponent } from './op-custom-tag-builder/op-custom-tag-builder.component';
+import { MarkdownModule } from 'ngx-markdown';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     TagListComponent,
     BearerTokenGeneratorComponent,
     FolderDomainIdsComponent,
-    AggregatedAuditReportsComponent
+    AggregatedAuditReportsComponent,
+    OpCustomTagBuilderComponent
   ],
   imports: [
     FormsModule,
@@ -80,7 +84,9 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatProgressBarModule,
     ClipboardModule,
     MatSlideToggleModule,
-    MatStepperModule
+    MatStepperModule,
+    MarkdownModule.forRoot(),
+    MatSnackBarModule
   ],
   providers: [
     Title,

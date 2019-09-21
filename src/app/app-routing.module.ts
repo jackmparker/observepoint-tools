@@ -7,6 +7,7 @@ import { TagListComponent } from './tag-list/tag-list.component';
 import { BearerTokenGeneratorComponent } from './bearer-token-generator/bearer-token-generator.component';
 import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.component';
 import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
+import { OpCustomTagBuilderComponent } from './op-custom-tag-builder/op-custom-tag-builder.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'tag-list', component: TagListComponent },
   { path: 'bearer-token', component: BearerTokenGeneratorComponent },
   { path: 'folder-domain-ids', component: FolderDomainIdsComponent },
-  { path: 'audit-reports', component: AggregatedAuditReportsComponent }
+  { path: 'audit-reports', component: AggregatedAuditReportsComponent },
+  { path: 'op-custom-tag-builder', component: OpCustomTagBuilderComponent }
 ];
 
 @NgModule({
