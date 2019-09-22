@@ -58,6 +58,12 @@ export const TOOL_NAMES = {
         PATH: '/op-custom-tag-builder',
         TITLE: 'Custom Tag Builder',
         DESCRIPTION: 'Leverage the power of the ObservePoint Custom Tag to collect additional data in your audits and journeys.'
+    },
+    RUN_ENTIRE_FOLDER : {
+        DISPLAY_NAME: 'RUN ENTIRE FOLDER',
+        PATH: '/run-entire-folder',
+        TITLE: 'Run Entire Folder',
+        DESCRIPTION: 'Run all items in a folder with the single press of a button.'
     }
 }
 

@@ -193,4 +193,46 @@ export class ApiService {
     return this.http.post('https://jackparker.me/observepoint-tools/fatkat/', JSON.stringify(payload));
   }
 
+  getAppJourneys(key: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.get(this.url + 'app-journeys', httpOptions);
+  }
+
+  runAudit(key: string, auditId: number) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    console.log(auditId);
+
+    return this.http.post(this.url + 'web-audits/' + auditId + '/runs', null, httpOptions);
+  }
+
+  runWebJourney(key: string, webJourneyId: number) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.post(this.url + 'web-journeys/' + webJourneyId + '/runs', null, httpOptions);
+  }
+
+  runAppJourney(key: string, appJourneyId: number) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'api_key ' + key
+      })
+    };
+
+    return this.http.post(this.url + 'app-journeys/' + appJourneyId + '/runs', null, httpOptions);
+  }
+
 }
