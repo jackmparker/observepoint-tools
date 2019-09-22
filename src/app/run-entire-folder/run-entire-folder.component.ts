@@ -22,6 +22,7 @@ export class RunEntireFolderComponent implements OnInit {
   apiKey: string;
   gotData: boolean = false;
   folders;
+  searchText: string;
 
   constructor(
     private titleService: Title,
