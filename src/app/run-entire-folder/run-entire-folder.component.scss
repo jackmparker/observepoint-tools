@@ -1,0 +1,80 @@
+@import '../../assets/styles/variables.scss';
+
+:host {
+    
+    .button-wrap {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+
+        .mat-spinner {
+            margin-right: 10px;
+        }
+    }
+
+    .search {
+        position: relative;
+        width: 100%;
+        margin-bottom: 30px;
+
+        .search-field {
+            padding-left: 25px;
+            box-sizing: border-box;
+        }
+
+        .search-icon {
+            color: #aaa;
+            position: absolute;
+            top: 21px;
+            left: 0;
+            font-size: 25px;
+        }
+
+        .mat-form-field {
+            width: 100%;
+        }
+    }
+
+    .folder {
+        border: 1px solid #dedede;
+        margin-bottom: 50px;
+
+        .folder-heading {
+            border-bottom: 1px solid #dedede;
+            padding: 15px 20px;
+            background-color: #f6f6f6;
+            display: flex;
+            justify-content: space-between;
+
+            .folder-name {
+                display: flex;
+                align-items: center;
+
+                .mat-icon {
+                    margin-right: 7px;                    
+                }
+            }
+
+            button {
+                .running {
+                    animation: spin 2000ms infinite linear;
+                }
+            }
+        }
+
+        .folder-description {
+            padding: 15px 20px;
+        }
+    }
+}
+
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}

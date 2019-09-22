@@ -41,6 +41,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { OpCustomTagBuilderComponent } from './op-custom-tag-builder/op-custom-tag-builder.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RunEntireFolderComponent } from './run-entire-folder/run-entire-folder.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BearerTokenGeneratorComponent,
     FolderDomainIdsComponent,
     AggregatedAuditReportsComponent,
-    OpCustomTagBuilderComponent
+    OpCustomTagBuilderComponent,
+    RunEntireFolderComponent
   ],
   imports: [
     FormsModule,

@@ -14,7 +14,7 @@
             padding: 30px 20px;
             width: 300px;
             height: 160px;
-            flex: 0 1 calc(50% - 48px);
+            flex: 0 1 calc(33.333% - 50px);
         
             mat-card-title {
                 color: $yellow;
@@ -22,7 +22,7 @@
             }
         }
 
-        .tool:nth-child(even) {
+        .tool:nth-child(3n) {
             margin-right: 0;
         }
     }

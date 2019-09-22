@@ -1,0 +1,75 @@
+<div class="outer-wrap flex">
+    <sidebar current="{{ sidebar }}"></sidebar>
+    <div class="main">
+      <mat-card class="tool-container">
+        <mat-card-title class="tool-title">{{ title }}</mat-card-title>
+        <mat-card-content class="tool-description">{{ description }}</mat-card-content>
+
+        <div class="form-wrap" *ngIf="!gotData">
+            <profile-selector [form]="runEntireFolderForm"></profile-selector>
+            <div class="button-wrap">
+                <button (click)="getItems()"
+                        mat-flat-button
+                        color="primary">
+                    Get Folders
+                </button>
+                <mat-spinner *ngIf="showSpinner"
+                             [diameter]="25"
+                             [strokeWidth]="4">
+                </mat-spinner>
+            </div>
+        </div>
+
+        
+          
+
+        <div *ngIf="gotData">
+          <div class="search">
+                <mat-icon class="search-icon">search</mat-icon>
+                <mat-form-field class="search-field">
+                    <input matInput autocomplete="off" placeholder="Search Folders" [(ngModel)]="searchText">
+                </mat-form-field>
+            </div>
+          <div class="folder" *ngFor="let folder of folders | filter: searchText">
+            <div class="folder-heading">
+              <div class="folder-name">
+                <mat-icon>folder_open</mat-icon>
+                {{ folder.name }}
+                ({{ folder.audits.length + folder.webJourneys.length + folder.appJourneys.length }})
+              </div>
+              <button (click)="runEntireFolder(folder)"
+                      mat-flat-button
+                      color="primary"
+                      [disabled]="folder.running">
+                  <mat-icon [class.running]="folder.running">autorenew</mat-icon> Run Entire Folder
+              </button>
+            </div>
+            <mat-tab-group>
+              <mat-tab label="Web Audits ({{ folder.audits.length }})" *ngIf="folder.audits.length">
+                <div class="folder-description">
+                  <ul>
+                    <li *ngFor="let audit of folder.audits">{{ audit.name }}</li>
+                  </ul>
+                </div>
+              </mat-tab>
+              <mat-tab label="Web Journeys ({{ folder.webJourneys.length }})" *ngIf="folder.webJourneys.length">
+                <div class="folder-description">
+                  <ul>
+                    <li *ngFor="let webJourney of folder.webJourneys">{{ webJourney.name }}</li>
+                  </ul>
+                </div>
+              </mat-tab>
+              <mat-tab label="app Journeys ({{ folder.appJourneys.length }})" *ngIf="folder.appJourneys.length">
+                <div class="folder-description">
+                  <ul>
+                    <li *ngFor="let appJourney of folder.appJourneys">{{ appJourney.name }}</li>
+                  </ul>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+
+      </mat-card>
+    </div>
+  </div>

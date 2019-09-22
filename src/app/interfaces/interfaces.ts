@@ -89,3 +89,11 @@ export interface ITagListModel {
     id: number;
     name: string;
 }
+
+export interface IJourneyModel {
+    id: number;
+    name: string;
+    folderId: number;
+    domainId: number;
+    labels: any;
+}
