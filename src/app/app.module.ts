@@ -38,12 +38,16 @@ import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.
 import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
+<<<<<<< HEAD
 import { OpCustomTagBuilderComponent } from './op-custom-tag-builder/op-custom-tag-builder.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RunEntireFolderComponent } from './run-entire-folder/run-entire-folder.component';
 import { BulkDeleteComponent } from './bulk-delete/bulk-delete.component';
 import { BulkDeleteTableComponent } from './bulk-delete-table/bulk-delete-table.component';
+=======
+import { BulkDeleteComponent } from './bulk-delete/bulk-delete.component';
+>>>>>>> ac86bfe168d71df32f466765e173f749bd2efe4f
 
 @NgModule({
   declarations: [
