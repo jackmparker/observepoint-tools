@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { TOOL_NAMES } from '../constants/constants';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IProfileModel, IFolderModel } from '../interfaces/interfaces';
+import { IProfileModel, IFolderDomainIdModel } from '../interfaces/interfaces';
 import { ProfileService } from '../profile-service.service';
 import { ApiService } from '../api.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'bulk-delete',
@@ -23,6 +21,7 @@ export class BulkDeleteComponent implements OnInit {
   formSubmitted: boolean = false;
   showSpinner: boolean = false;
   apiKey: string;
+  folderObj: any;
 
   constructor(private titleService: Title,
               private fb: FormBuilder,
@@ -60,7 +59,8 @@ export class BulkDeleteComponent implements OnInit {
   }
 
   getItems() {
-    this.showSpinner = false;
+    this.showSpinner = true;
+    this.formSubmitted = true;
     this.getApiKey();
     this.getFolders();
   }
@@ -71,34 +71,16 @@ export class BulkDeleteComponent implements OnInit {
    *
   */
  
-  folders: IFolderModel[];
-  displayedColumns: string[] = ['select', 'name', 'domains', 'apps', 'createdBy'];
-  dataSource = new MatTableDataSource<IFolderModel>();
-  selection = new SelectionModel<IFolderModel>(true, []);
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
-  }
+  folders: IFolderDomainIdModel[];
 
   private getFolders() {
-    this.apiService.getFolders(this.apiKey).subscribe((folders: IFolderModel[]): void => {
+    this.apiService.getFolders(this.apiKey).subscribe((folders: IFolderDomainIdModel[]): void => {
+      this.folderObj = {
+        
+      }
+
       this.folders = folders;
-      this.showSpinner = false;
-      this.formSubmitted = true;
-      this.displayFolders();  
     });
-  }
-  
-  private displayFolders() {
-    this.dataSource.data = this.folders;
   }
 
 

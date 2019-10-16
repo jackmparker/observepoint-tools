@@ -43,6 +43,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RunEntireFolderComponent } from './run-entire-folder/run-entire-folder.component';
 import { BulkDeleteComponent } from './bulk-delete/bulk-delete.component';
+import { BulkDeleteTableComponent } from './bulk-delete-table/bulk-delete-table.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { BulkDeleteComponent } from './bulk-delete/bulk-delete.component';
     AggregatedAuditReportsComponent,
     OpCustomTagBuilderComponent,
     RunEntireFolderComponent,
-    BulkDeleteComponent
+    BulkDeleteComponent,
+    BulkDeleteTableComponent
   ],
   imports: [
     FormsModule,
