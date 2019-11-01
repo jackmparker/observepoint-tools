@@ -29,6 +29,11 @@ export class ProfileSelectorComponent implements OnInit {
 
   ngOnInit() {
     this.profiles = this.profileService.getProfiles();
+
+    if(this.profiles.length === 1) {
+      this.apiKey.setValue(this.profiles[0].key);
+      this.onKeyChosen();
+    }
   }
 
   enterNewKey() {
@@ -66,7 +71,15 @@ export class ProfileSelectorComponent implements OnInit {
   }
 
   onKeyEntered() {
+    let newKey: IProfileModel = {
+      name: this.profileName.value,
+      key: this.profileKey.value
+    };
+
+    this.profiles.push(newKey);
+    this.profileService.updateProfiles(this.profiles);
     this.keyEmitter.emit(this.profileKey.value);
+    this.apiKey.setValue(newKey.key);
   }
 
   get apiKey() {

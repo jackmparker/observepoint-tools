@@ -73,7 +73,6 @@ export class BulkEmailComponent implements OnInit {
 
   ngOnInit() {
     this.setTitle(TOOL_NAMES.BULK_EMAIL.TITLE);
-    this.profiles = this.profileService.getProfiles();
 
     this.bulkEmailForm = this.fb.group({
       addRemove: ['add', Validators.required],
@@ -95,17 +94,14 @@ export class BulkEmailComponent implements OnInit {
       checkboxValidator: [null, Validators.required]
     });
 
-    if(this.profiles.length) {
-      this.name.disable();
-      this.key.disable();
-    } else {
-      this.profile.disable();
-    }
+    this.profiles = this.profileService.getProfiles();
+
+    this.evalProfiles();
 
     this.addRemove.valueChanges
     .pipe(takeUntil(this.destroy$))
     .subscribe(change => {
-      this.addRemoveSelection = change == 'add' ? 'Add emails to:' : 'Remove emails from:';
+      this.addRemoveSelection = change === 'add' ? 'Add emails to:' : 'Remove emails from:';
     });
 
     this.applyTo.valueChanges
@@ -123,7 +119,22 @@ export class BulkEmailComponent implements OnInit {
     this.titleService.setTitle(title + ' | ObservePoint Tools');
   }
 
+  private evalProfiles() {
+    this.profiles = this.profileService.getProfiles();
+
+    if(this.profiles.length) {
+      this.name.disable();
+      this.key.disable();
+      this.profile.enable();
+    } else {
+      this.name.enable();
+      this.key.enable();
+      this.profile.disable();
+    }
+  }
+
   getFilters(key: string): void {
+    this.evalProfiles();
     this.apiKey = key;
     
     // labels

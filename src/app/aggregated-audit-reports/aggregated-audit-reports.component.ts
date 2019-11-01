@@ -70,38 +70,53 @@ export class AggregatedAuditReportsComponent implements OnInit {
       runsSelectedValidator: [null, Validators.required]
     });
 
-    this.profiles = this.profileService.getProfiles();
-
-    if(this.profiles.length) {
-      this.name.disable();
-      this.key.disable();
-    } else {
-      this.profile.disable();
-    }
+    this.evalProfiles();
   }
 
   private setTitle(title: string): void {
     this.titleService.setTitle(title + ' | ObservePoint Tools');
   }
 
+  private evalProfiles() {
+    this.profiles = this.profileService.getProfiles();
+
+    if(this.profiles.length) {
+      this.name.disable();
+      this.key.disable();
+      this.profile.enable();
+    } else {
+      this.name.enable();
+      this.key.enable();
+      this.profile.disable();
+    }
+  }
+
   onProfileSelection(key: string): void {
+    this.evalProfiles();
     this.apiKey = key;
-    this.stepOneCompleted = true;
     this.getAudits();
     this.getTags();
   }
 
   getAudits(): void {
-    this.apiService.getAudits(this.apiKey).subscribe((audits: IAuditModel[]) => {
-      this.audits = audits.map((audit: IAuditModel) => {
-        return {
-          name: audit.name,
-          id: audit.id
-        };
-      });
+    this.apiService.getAudits(this.apiKey).subscribe(
+      (audits: IAuditModel[]) => {
+        this.stepOneCompleted = true;
+        
+        this.audits = audits.map((audit: IAuditModel) => {
+          return {
+            name: audit.name,
+            id: audit.id
+          };
+        });
 
-      this.audits.sort((a: any, b: any) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
-    });
+        this.audits.sort((a: any, b: any) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+      },
+      (error) => {
+        this.profile.setErrors({ invalidApiKey: true });
+        this.profile.markAsTouched();
+      }
+  );
   }
 
   getTags() {

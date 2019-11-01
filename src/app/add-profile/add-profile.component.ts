@@ -19,8 +19,8 @@ export class AddProfileComponent implements OnInit {
   ngOnInit() {
     this.dialogRef.updatePosition({ top: '200px' });
 
-    let name = this.data.event == 'edit' ? this.data.profile.name : '';
-    let key = this.data.event == 'edit' ? this.data.profile.key : '';
+    let name = this.data.event === 'edit' ? this.data.profile.name : '';
+    let key = this.data.event === 'edit' ? this.data.profile.key : '';
 
     this.newProfileForm = this.fb.group({
       name: [name, Validators.required],

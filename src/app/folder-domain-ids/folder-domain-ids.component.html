@@ -6,12 +6,14 @@
         <mat-card-content class="tool-description">{{ description }}</mat-card-content>
 
         <div *ngIf="!folderIds && !domainIds" class="form-wrap">
-            <profile-selector [form]="apiKeyForm">
+            <profile-selector [form]="apiKeyForm"
+                              (keyEmitter)="onProfileSelection($event)">
             </profile-selector>
             <div class="button-wrap">
                 <button (click)="getIds()"
                         mat-flat-button
-                        color="primary">
+                        color="primary"
+                        [disabled]="apiKeyForm.status === 'INVALID'">
                     Get IDs
                 </button>
                 <mat-spinner *ngIf="showSpinner"

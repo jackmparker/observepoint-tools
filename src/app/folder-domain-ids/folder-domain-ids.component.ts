@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TOOL_NAMES } from '../constants/constants';
 import { Title } from '@angular/platform-browser';
 import { MatTableDataSource } from '@angular/material/table';
-import { IFolderDomainIdModel } from '../interfaces/interfaces';
 import { ApiService } from '../api.service';
 import { MatSort } from '@angular/material/sort';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { IProfileModel } from '../interfaces/interfaces';
+import { ProfileService } from '../profile-service.service';
 
 @Component({
   selector: 'app-folder-domain-ids',
@@ -21,6 +22,7 @@ export class FolderDomainIdsComponent implements OnInit {
   title: string = TOOL_NAMES.FOLDER_DOMAIN_IDS.DISPLAY_NAME;
   sidebar: string = TOOL_NAMES.FOLDER_DOMAIN_IDS.PATH;
   description: string = TOOL_NAMES.FOLDER_DOMAIN_IDS.DESCRIPTION;
+  profiles: IProfileModel[];
   apiKey: string;
   apiKeyForm: FormGroup;
   showSpinner: boolean = false;
@@ -32,7 +34,8 @@ export class FolderDomainIdsComponent implements OnInit {
 
   constructor(private titleService: Title,
               private apiService: ApiService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private profileService: ProfileService) { }
 
   ngOnInit() {
     this.setTitle(TOOL_NAMES.FOLDER_DOMAIN_IDS.TITLE);
@@ -51,9 +54,28 @@ export class FolderDomainIdsComponent implements OnInit {
     this.titleService.setTitle(title + ' | ObservePoint Tools');
   }
 
+  private evalProfiles() {
+    this.profiles = this.profileService.getProfiles();
+
+    if(this.profiles.length) {
+      this.name.disable();
+      this.key.disable();
+      this.profile.enable();
+    } else {
+      this.name.enable();
+      this.key.enable();
+      this.profile.disable();
+    }
+  }
+
+  onProfileSelection(key: string): void {
+    this.evalProfiles();
+    this.apiKey = key;
+  }
+
   getIds() {
     this.showSpinner = true;
-    this.apiKey = this.key ? this.key : this.profile;
+    this.apiKey = this.key.value ? this.key.value : this.profile.value;
 
     let folders = this.apiService.getFolderIds(this.apiKey);
     let domains = this.apiService.getDomainIds(this.apiKey);
@@ -184,12 +206,16 @@ export class FolderDomainIdsComponent implements OnInit {
     this.exportCSVFile(headers, itemsFormatted, fileTitle);
   }
 
+  get name() {
+    return this.apiKeyForm.get('name');
+  }
+
   get key() {
-    return this.apiKeyForm.get('key').value;
+    return this.apiKeyForm.get('key');
   }
 
   get profile() {
-    return this.apiKeyForm.get('profile').value;
+    return this.apiKeyForm.get('profile');
   }
 
 }
