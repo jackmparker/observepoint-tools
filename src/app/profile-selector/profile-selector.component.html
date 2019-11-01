@@ -16,7 +16,7 @@
 <div *ngIf="!profiles.length" [formGroup]="form">
     <div class="form-group input">
         <mat-form-field>
-            <input formControlName="name" matInput placeholder="API Key Name">
+            <input formControlName="name" matInput placeholder="Enter a name for your API key (we'll save it for the next time you visit)">
         </mat-form-field>
         <div *ngIf="profileName.errors && profileName.touched" class="form-error">
             <small *ngIf="profileName.errors.required">This field is required</small>
@@ -24,7 +24,7 @@
     </div>
     <div class="form-group input">
         <mat-form-field>
-            <input formControlName="key" matInput placeholder="API Key Value" (blur)="onKeyEntered()">
+            <input formControlName="key" matInput placeholder="API Key" (blur)="onKeyEntered()">
         </mat-form-field>
         <div *ngIf="profileKey.errors && profileKey.touched" class="form-error">
             <small *ngIf="profileKey.errors.required">This field is required</small>

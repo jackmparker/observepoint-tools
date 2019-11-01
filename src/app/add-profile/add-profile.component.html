@@ -2,13 +2,13 @@
 <h1 *ngIf="data.event == 'edit'">Edit API Key Profile</h1>
 <form [formGroup]="newProfileForm">
     <mat-form-field>
-        <input formControlName="name" matInput placeholder="API Key Name">
+        <input formControlName="name" matInput placeholder="Enter a name for your API key (we'll save it for the next time you visit)">
     </mat-form-field>
     <div *ngIf="newProfileForm.controls.name.errors && newProfileForm.controls.name.touched" class="form-error">
         <small>This field is required</small>
     </div>
     <mat-form-field>
-        <input formControlName="key" matInput placeholder="API Key Value">
+        <input formControlName="key" matInput placeholder="API Key">
     </mat-form-field>
     <div *ngIf="newProfileForm.controls.key.errors && newProfileForm.controls.key.touched" class="form-error">
         <small>This field is required</small>
