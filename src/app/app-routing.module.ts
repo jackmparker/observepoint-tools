@@ -9,6 +9,7 @@ import { FolderDomainIdsComponent } from './folder-domain-ids/folder-domain-ids.
 import { AggregatedAuditReportsComponent } from './aggregated-audit-reports/aggregated-audit-reports.component';
 import { OpCustomTagBuilderComponent } from './op-custom-tag-builder/op-custom-tag-builder.component';
 import { RunEntireFolderComponent } from './run-entire-folder/run-entire-folder.component';
+import { CopyJourneyComponent } from './copy-journey/copy-journey.component';
 
 
 const routes: Routes = [
@@ -20,11 +21,12 @@ const routes: Routes = [
   { path: 'folder-domain-ids', component: FolderDomainIdsComponent },
   { path: 'audit-reports', component: AggregatedAuditReportsComponent },
   { path: 'op-custom-tag-builder', component: OpCustomTagBuilderComponent },
-  { path: 'run-entire-folder', component: RunEntireFolderComponent }
+  { path: 'run-entire-folder', component: RunEntireFolderComponent },
+  { path: 'copy-journey', component: CopyJourneyComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
 })
 export class AppRoutingModule { }

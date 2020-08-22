@@ -64,6 +64,12 @@ export const TOOL_NAMES = {
         PATH: '/run-entire-folder',
         TITLE: 'Run Entire Folder',
         DESCRIPTION: 'Run all items in a folder with the single press of a button.'
+    },
+    COPY_JOURNEY : {
+        DISPLAY_NAME: 'COPY JOURNEY BETWEEN ACCOUNTS',
+        PATH: '/copy-journey',
+        TITLE: 'Copy Journey Between Accounts',
+        DESCRIPTION: 'Copy a journey from one ObservePoint account to another.'
     }
 }
 
